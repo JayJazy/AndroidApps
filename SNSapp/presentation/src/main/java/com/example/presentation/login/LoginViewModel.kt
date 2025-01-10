@@ -3,6 +3,7 @@ package com.example.presentation.login
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import com.example.domain.usecase.login.LoginUseCase
+import com.example.domain.usecase.login.SetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.orbitmvi.orbit.Container
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @OrbitExperimental
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val setTokenUseCase: SetTokenUseCase,
 ) : ViewModel(), ContainerHost<LoginState, LoginSideEffect> {
 
     override val container: Container<LoginState, LoginSideEffect> = container(
@@ -37,7 +39,9 @@ class LoginViewModel @Inject constructor(
         val id = state.id
         val password = state.password
         val token = loginUseCase(id, password).getOrThrow()
-        postSideEffect(LoginSideEffect.Toast(message = "token = $token"))
+        setTokenUseCase(token)
+        //postSideEffect(LoginSideEffect.Toast(message = "token = $token"))
+        postSideEffect(LoginSideEffect.NavigateToMainActivity)
 
     }
 
@@ -64,4 +68,5 @@ data class LoginState(
 
 sealed interface LoginSideEffect {
     class Toast(val message: String) : LoginSideEffect
+    data object NavigateToMainActivity : LoginSideEffect
 }

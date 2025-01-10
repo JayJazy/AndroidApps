@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
@@ -50,6 +51,9 @@ dependencies {
 
     // serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // datastore
+    implementation (libs.datastore)
 
     // retrofit
     implementation(libs.retrofit)

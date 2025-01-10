@@ -75,5 +75,5 @@ data class SignUpState(
 sealed interface SignUpSideEffect {
     class Toast(val message: String) : SignUpSideEffect
 
-    object NavigateToLoginScreen : SignUpSideEffect
+    data object NavigateToLoginScreen : SignUpSideEffect
 }
