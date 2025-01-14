@@ -1,1 +1,1 @@
-## SNS 데모 앱 입니다
+## SNS Demo App
