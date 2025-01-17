@@ -23,6 +23,7 @@ annotation = "1.9.1"
 ksp = "2.0.20-1.0.24"
 firebase-components = "18.0.1"
 junit-ktx = "1.2.1"
+ui-android = "1.7.6"
 
 
 [libraries]
@@ -72,6 +73,7 @@ room-paging = { group = "androidx.room", name = "room-paging", version.ref = "ro
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 firebase-components = { group = "com.google.firebase", name = "firebase-components", version.ref = "firebase-components" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit-ktx" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "ui-android" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

@@ -22,9 +22,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.presentation.MainActivity
 import com.example.presentation.component.SNSButton
 import com.example.presentation.component.SNSTextField
+import com.example.presentation.main.MainActivity
 import com.example.snsapp.ui.theme.SNSAppTheme
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.compose.collectAsState
@@ -34,7 +34,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onNavigateToSignUpScreen:()->Unit,
+    onNavigateToSignUpScreen:()->Unit
 ) {
     val state = viewModel.collectAsState().value
     val context = LocalContext.current
