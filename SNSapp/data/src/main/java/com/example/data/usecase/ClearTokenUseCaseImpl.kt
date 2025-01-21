@@ -8,7 +8,7 @@ class ClearTokenUseCaseImpl @Inject constructor(
     private val userDataStore: UserDataStore
 ) : ClearTokenUseCase {
 
-    override suspend fun invoke() {
+    override suspend fun invoke() : Result<Unit> = runCatching {
         userDataStore.clearToken()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.data.di
 
+import com.example.data.retrofit.SNSInterceptor
 import com.example.data.retrofit.UserService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -12,16 +13,17 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 
-val SNS_HOST = "http://121.175.206.32:8080"
+val SNS_HOST = "http://121.175.169.231:8080"
 
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
 
     @Provides
-    fun provideOkHttpClient():OkHttpClient{
+    fun provideOkHttpClient(interceptor: SNSInterceptor):OkHttpClient{
         return OkHttpClient
             .Builder()
+            .addInterceptor(interceptor)
             .build()
     }
 

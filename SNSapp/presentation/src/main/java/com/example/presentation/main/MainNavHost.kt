@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.presentation.R
 import com.example.presentation.main.board.BoardScreen
 import com.example.presentation.main.setting.SettingScreen
+import com.example.presentation.main.setting.SettingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
