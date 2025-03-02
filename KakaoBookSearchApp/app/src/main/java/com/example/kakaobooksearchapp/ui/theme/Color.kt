@@ -4,7 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val orange = Color(0xFFFFA500)
 val light_gray = Color(0xFFA9A9A9)
-val dark_bg = Color(0xFF1A1C1E)
+val dark_bg = Color(0xFF353739)
+val image_bg = Color(0xFFD3D3D4)
 val light_line = Color(0xFFCBCBCB)
 
 sealed class ThemeColors(
@@ -12,6 +13,7 @@ sealed class ThemeColors(
     val onPrimary: Color,
     val surface: Color,
     val surfaceContainerHigh: Color,
+    val onSurface: Color,
     val text: Color,
 
 )  {
@@ -20,6 +22,7 @@ sealed class ThemeColors(
         onPrimary = orange,
         surface = light_gray,
         surfaceContainerHigh = light_line,
+        onSurface = image_bg,
         text = Color.White
     )
     data object Light: ThemeColors(
@@ -27,6 +30,7 @@ sealed class ThemeColors(
         onPrimary = orange,
         surface = light_gray,
         surfaceContainerHigh = light_gray,
+        onSurface = image_bg,
         text = Color.Black
     )
 }

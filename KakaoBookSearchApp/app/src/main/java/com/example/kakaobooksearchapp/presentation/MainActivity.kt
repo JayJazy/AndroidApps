@@ -25,7 +25,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookContent
-import com.example.kakaobooksearchapp.presentation.navigtation.model.bottomNavItems
+import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSingleTop
+import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
 import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
 
@@ -35,9 +36,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+            var selectedItemIndex by rememberSaveable { mutableIntStateOf(1) }
             var currentThemeMode by rememberSaveable { mutableStateOf(ThemeMode.LIGHT) }
             val borderColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            val bottomNavItems = rememberBottomNavItems()
 
             KakaoBookSearchAppTheme(themeMode = currentThemeMode) {
                 Scaffold(
@@ -62,7 +64,7 @@ class MainActivity : ComponentActivity() {
                                     selected = selectedItemIndex == index,
                                     onClick = {
                                         selectedItemIndex = index
-                                        navController.navigate(bottomAppBarNavItem.title)
+                                        navController.navigateSingleTop(bottomAppBarNavItem.title)
                                     },
                                     label = {
                                         Text(
@@ -71,11 +73,7 @@ class MainActivity : ComponentActivity() {
                                     },
                                     icon = {
                                         Icon(
-                                            imageVector = if (index == selectedItemIndex) {
-                                                bottomAppBarNavItem.selectedIcon
-                                            } else {
-                                                bottomAppBarNavItem.unselectedIcon
-                                            },
+                                            imageVector = bottomAppBarNavItem.icon,
                                             contentDescription = bottomAppBarNavItem.title
                                         )
                                     },

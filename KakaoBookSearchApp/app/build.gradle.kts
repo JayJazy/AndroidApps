@@ -59,4 +59,11 @@ dependencies {
     // navigation
     implementation(libs.navigation.compose)
     implementation(libs.hilt.navigation.compose)
+
+    // refresh
+    implementation(libs.compose.material3)
+    implementation(libs.accompanist.swiperefresh)
+
+    // coil
+    implementation(libs.coil.compose)
 }

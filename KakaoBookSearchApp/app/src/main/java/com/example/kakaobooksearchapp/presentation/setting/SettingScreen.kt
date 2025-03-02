@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.feature.setting
+package com.example.kakaobooksearchapp.presentation.setting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,7 +44,7 @@ fun SettingScreen(
                         selected = currentThemeMode == mode,
                         onClick = { onThemeModeChange(mode) }
                     )
-                    .padding(horizontal = 120.dp),
+                    .padding(horizontal = 100.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -59,6 +59,8 @@ fun SettingScreen(
                     )
                 )
                 Text(
+                    modifier = modifier
+                        .fillMaxWidth(),
                     text = label,
                     color = if(currentThemeMode  == mode) {
                         MaterialTheme.colorScheme.onPrimary
