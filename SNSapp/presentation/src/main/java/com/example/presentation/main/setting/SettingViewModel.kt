@@ -57,6 +57,12 @@ class SettingViewModel @Inject constructor(
         postSideEffect(SettingSideEffect.NavigateToLoginActivity)
     }
 
+    fun onUsernameChange(username: String) = intent {
+        reduce {
+            state.copy(userName = username)
+        }
+    }
+
 }
 
 

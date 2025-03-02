@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 
-val SNS_HOST = "http://121.175.169.231:8080"
+val SNS_HOST = "http://192.168.0.2:8080"
 
 @Module
 @InstallIn(SingletonComponent::class)

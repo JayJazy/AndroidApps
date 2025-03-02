@@ -22,6 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +48,9 @@ fun SettingScreen(settingViewModel : SettingViewModel = hiltViewModel())
 
     val context = LocalContext.current
     val state  = settingViewModel.collectAsState().value
+    var usernameDialogVisible by remember { mutableStateOf(false) }
+
+
     settingViewModel.collectSideEffect { sideEffect ->
         when(sideEffect){
             is SettingSideEffect.Toast -> {
@@ -61,9 +68,18 @@ fun SettingScreen(settingViewModel : SettingViewModel = hiltViewModel())
         userName = state.userName,
         profileImageUrl = state.profileImageUrl,
         onImageChangeClick = { },
-        onNameChangeClick = { },
+        onNameChangeClick = { usernameDialogVisible = true },
         onLogoutClick = settingViewModel::onLogoutClick
     )
+
+    if(usernameDialogVisible){
+        UsernameDialog(
+            visible = usernameDialogVisible,
+            initialUsername = state.userName,
+            onUsernameChange = settingViewModel::onUsernameChange,
+            onDismissRequest = { usernameDialogVisible = false })
+    }
+
 }
 
 
