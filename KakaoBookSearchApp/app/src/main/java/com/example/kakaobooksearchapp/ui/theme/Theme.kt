@@ -1,36 +1,40 @@
 package com.example.kakaobooksearchapp.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val DarkColorScheme = darkColorScheme(
-    background = ThemeColors.Night.backGround,
-    onPrimary = ThemeColors.Night.onPrimary,
-    surface = ThemeColors.Night.surface,
-    surfaceContainerHigh = ThemeColors.Night.surfaceContainerHigh,
-    primary = ThemeColors.Night.text,
+    background = ThemeColors.Dark.backGround,
+    onPrimary = ThemeColors.Dark.onPrimary,
+    surface = ThemeColors.Dark.surface,
+    surfaceContainerHigh = ThemeColors.Dark.surfaceContainerHigh,
+    primary = ThemeColors.Dark.text,
 )
 
 private val LightColorScheme = lightColorScheme(
-    background = ThemeColors.Day.backGround,
-    onPrimary = ThemeColors.Day.onPrimary,
-    surface = ThemeColors.Day.surface,
-    surfaceContainerHigh = ThemeColors.Day.surfaceContainerHigh,
-    primary = ThemeColors.Day.text,
+    background = ThemeColors.Light.backGround,
+    onPrimary = ThemeColors.Light.onPrimary,
+    surface = ThemeColors.Light.surface,
+    surfaceContainerHigh = ThemeColors.Light.surfaceContainerHigh,
+    primary = ThemeColors.Light.text,
 )
 
 @Composable
 fun KakaoBookSearchAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) {
-        DarkColorScheme
-    } else {
+    val lightTheme = when (themeMode) {
+        ThemeMode.LIGHT -> true
+        ThemeMode.DARK -> false
+    }
+
+    val colorScheme = if (lightTheme) {
         LightColorScheme
+    } else {
+        DarkColorScheme
     }
 
     MaterialTheme(
@@ -38,4 +42,8 @@ fun KakaoBookSearchAppTheme(
         typography = Typography,
         content = content
     )
+}
+
+enum class ThemeMode {
+    LIGHT, DARK
 }

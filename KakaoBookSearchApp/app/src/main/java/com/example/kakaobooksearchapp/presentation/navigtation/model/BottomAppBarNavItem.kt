@@ -29,3 +29,13 @@ val bottomNavItems = listOf(
         unselectedIcon = Icons.Filled.Settings
     ),
 )
+
+sealed class KakaoBookRoute(
+    val route: String
+) {
+    data object Favorite: KakaoBookRoute(route = bottomNavItems[0].title)
+
+    data object Home: KakaoBookRoute(route = bottomNavItems[1].title)
+
+    data object Setting: KakaoBookRoute(route = bottomNavItems[2].title)
+}

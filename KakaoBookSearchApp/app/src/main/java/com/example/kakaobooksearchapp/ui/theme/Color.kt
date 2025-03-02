@@ -15,14 +15,14 @@ sealed class ThemeColors(
     val text: Color,
 
 )  {
-    data object Night: ThemeColors(
+    data object Dark: ThemeColors(
         backGround = dark_bg,
         onPrimary = orange,
         surface = light_gray,
         surfaceContainerHigh = light_line,
         text = Color.White
     )
-    data object Day: ThemeColors(
+    data object Light: ThemeColors(
         backGround = Color.White,
         onPrimary = orange,
         surface = light_gray,

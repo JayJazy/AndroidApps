@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">KakaoBookSearchApp</string>
+
+    <!-- 테마 -->
+    <string name="light_theme">라이트 모드</string>
+    <string name="dark_theme">다크 모드</string>
 </resources>

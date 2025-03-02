@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,32 +16,44 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookContent
 import com.example.kakaobooksearchapp.presentation.navigtation.model.bottomNavItems
 import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
+import com.example.kakaobooksearchapp.ui.theme.ThemeMode
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+            var currentThemeMode by rememberSaveable { mutableStateOf(ThemeMode.LIGHT) }
+            val borderColor = MaterialTheme.colorScheme.surfaceContainerHigh
 
-            KakaoBookSearchAppTheme {
+            KakaoBookSearchAppTheme(themeMode = currentThemeMode) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         NavigationBar(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                )
+                                .drawBehind {
+                                    drawLine(
+                                        color = borderColor,
+                                        start = Offset(0f, 0f),
+                                        end = Offset(size.width, 0f),
+                                        strokeWidth = 1.dp.toPx()
+                                    )
+                                }
                                 .padding(top = 1.dp),
                             containerColor = MaterialTheme.colorScheme.background
                         ) {
@@ -51,6 +62,7 @@ class MainActivity : ComponentActivity() {
                                     selected = selectedItemIndex == index,
                                     onClick = {
                                         selectedItemIndex = index
+                                        navController.navigate(bottomAppBarNavItem.title)
                                     },
                                     label = {
                                         Text(
@@ -83,7 +95,12 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     KakaoBookContent(
                         modifier = Modifier,
-                        innerPadding = innerPadding
+                        innerPadding = innerPadding,
+                        navController = navController,
+                        currentThemeMode = currentThemeMode,
+                        onThemeModeChange = { newThemeMode ->
+                            currentThemeMode = newThemeMode
+                        }
                     )
                 }
             }
