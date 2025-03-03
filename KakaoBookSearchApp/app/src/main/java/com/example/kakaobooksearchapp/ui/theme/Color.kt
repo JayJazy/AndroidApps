@@ -7,6 +7,7 @@ val light_gray = Color(0xFFA9A9A9)
 val dark_bg = Color(0xFF353739)
 val image_bg = Color(0xFFD3D3D4)
 val light_line = Color(0xFFCBCBCB)
+val red = Color.Red
 
 sealed class ThemeColors(
     val backGround: Color,
@@ -15,7 +16,7 @@ sealed class ThemeColors(
     val surfaceContainerHigh: Color,
     val onSurface: Color,
     val text: Color,
-
+    val secondary: Color,
 )  {
     data object Dark: ThemeColors(
         backGround = dark_bg,
@@ -23,7 +24,8 @@ sealed class ThemeColors(
         surface = light_gray,
         surfaceContainerHigh = light_line,
         onSurface = image_bg,
-        text = Color.White
+        text = Color.White,
+        secondary = red
     )
     data object Light: ThemeColors(
         backGround = Color.White,
@@ -31,6 +33,7 @@ sealed class ThemeColors(
         surface = light_gray,
         surfaceContainerHigh = light_gray,
         onSurface = image_bg,
-        text = Color.Black
+        text = Color.Black,
+        secondary = red
     )
 }

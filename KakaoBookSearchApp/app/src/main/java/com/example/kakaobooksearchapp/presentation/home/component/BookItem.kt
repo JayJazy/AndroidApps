@@ -33,12 +33,12 @@ fun BookItem(
     author: String = "저자",
     isBookmarked: Boolean = false,
     onBookmarkClick: () -> Unit = {},
-    onItemClick: () -> Unit = {},
+    onItemClick: (String) -> Unit,
 ) {
     var isBookmark by remember { mutableStateOf(isBookmarked) }
     Column(
         modifier = modifier
-            .clickable { onItemClick() }
+            .clickable { onItemClick("BookDetailItem") }
     ) {
         Box(
             modifier = modifier
@@ -94,6 +94,7 @@ fun PreviewBookItem() {
         modifier = Modifier,
         model = null,
         title = "제목",
-        author = "저자"
+        author = "저자",
+        onItemClick = {}
     )
 }

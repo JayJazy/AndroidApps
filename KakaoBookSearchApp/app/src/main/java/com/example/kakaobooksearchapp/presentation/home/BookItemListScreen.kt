@@ -21,12 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.kakaobooksearchapp.presentation.home.component.BookItem
 import kotlinx.coroutines.delay
 
 @Composable
 fun BookItemListScreen(
     modifier: Modifier = Modifier,
+    onItemClick: (String) -> Unit,
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
 
@@ -40,7 +42,8 @@ fun BookItemListScreen(
     BookItemListScreen(
         modifier = modifier,
         isRefreshing = isRefreshing,
-        onRefresh = { isRefreshing = true }
+        onRefresh = { isRefreshing = true },
+        onItemClick = onItemClick
     )
 }
 
@@ -50,6 +53,7 @@ fun BookItemListScreen(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
+    onItemClick: (String) -> Unit,
 ) {
     val state = rememberPullToRefreshState()
     val gridState = rememberLazyGridState()
@@ -83,7 +87,9 @@ fun BookItemListScreen(
                 count = 22,
                 key = { it }
             ) {
-                BookItem()
+                BookItem(
+                    onItemClick = onItemClick
+                )
             }
         }
     }
@@ -95,6 +101,7 @@ fun PreviewBookItemListScreen() {
     BookItemListScreen(
         modifier = Modifier,
         isRefreshing = false,
-        onRefresh = {}
+        onRefresh = {},
+        onItemClick = {}
     )
 }

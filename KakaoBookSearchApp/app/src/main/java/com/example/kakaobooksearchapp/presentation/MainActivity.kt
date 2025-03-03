@@ -29,7 +29,9 @@ import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSin
 import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
 import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

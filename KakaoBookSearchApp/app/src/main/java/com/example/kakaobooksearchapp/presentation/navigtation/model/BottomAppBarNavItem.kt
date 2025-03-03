@@ -46,7 +46,6 @@ sealed class KakaoBookRoute(
 fun NavController.navigateSingleTop(route: String) {
     this.navigate(route) {
         launchSingleTop = true
-        restoreState = false
         popUpTo(graph.id) {
             inclusive = true
         }
