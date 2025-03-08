@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -77,4 +78,15 @@ dependencies {
     // hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    // serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // datastore
+    implementation (libs.datastore)
+
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.serialization)
+    implementation(libs.okhttp)
 }

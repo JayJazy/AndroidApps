@@ -39,8 +39,8 @@ import com.example.kakaobooksearchapp.R
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     isDetailScreen: Boolean,
-    onSearchClick: () -> Unit,
-    onBackClick: () -> Unit
+    onSearchClick: (String) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -77,7 +77,7 @@ fun HomeTopBar(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.primary,
                 ),
-                keyboardActions = KeyboardActions(onSearch = { onSearchClick() }),
+                keyboardActions = KeyboardActions(onSearch = { onSearchClick(searchText) }),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 trailingIcon = {
                     if(isFocused && searchText.isNotEmpty()){
@@ -100,7 +100,7 @@ fun HomeTopBar(
                     .padding(top = 10.dp)
                     .clickable {
                         if(searchText.isNotEmpty()){
-                            onSearchClick()
+                            onSearchClick(searchText)
                         } else {
                             Toast.makeText(context, emptySearchText, Toast.LENGTH_SHORT).show()
                         }
@@ -119,7 +119,7 @@ fun HomeTopBar(
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp),
-                text = searchText,
+                text = stringResource(id = R.string.text_book_detail),
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -133,7 +133,7 @@ fun PreviewHomeTopBar1(){
         modifier = Modifier,
         isDetailScreen = true,
         onSearchClick = {},
-        onBackClick = {}
+        onBackClick = {},
     )
 }
 
@@ -144,6 +144,6 @@ fun PreviewHomeTopBar2(){
         modifier = Modifier,
         isDetailScreen = false,
         onSearchClick = {},
-        onBackClick = {  }
+        onBackClick = {},
     )
 }

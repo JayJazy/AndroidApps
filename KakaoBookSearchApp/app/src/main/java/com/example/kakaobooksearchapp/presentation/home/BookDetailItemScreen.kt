@@ -7,22 +7,23 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.kakaobooksearchapp.R
+import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
@@ -30,14 +31,20 @@ fun BookDetailItemScreen(
     modifier: Modifier = Modifier,
     viewModel: BookViewModel = hiltViewModel(),
 ) {
-    BookDetailItemScreen(
-        modifier = modifier
-    )
+    val bookData by viewModel.bookDetailItem.collectAsStateWithLifecycle()
+
+    bookData?.let { data ->
+        BookDetailItemScreen(
+            modifier = modifier,
+            bookData = data
+        )
+    }
 }
 
 @Composable
 fun BookDetailItemScreen(
     modifier: Modifier = Modifier,
+    bookData: Document
 ) {
     Column(
         modifier = modifier
@@ -61,7 +68,7 @@ fun BookDetailItemScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center),
-                    model = "",
+                    model = bookData.thumbnail,
                     placeholder = painterResource(id = R.drawable.loading_book),
                     error = painterResource(id = R.drawable.loading_book),
                     contentDescription = null
@@ -77,21 +84,24 @@ fun BookDetailItemScreen(
                 Text(
                     modifier = Modifier
                         .padding(vertical = 2.dp),
-                    text = "제목",
+                    text = bookData.title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Text(
                     modifier = Modifier
                         .padding(vertical = 2.dp),
-                    text = "저자",
+                    text = bookData.authors.joinToString(
+                        separator = stringResource(id = R.string.text_comma),
+                        prefix = stringResource(id = R.string.text_author)
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
                     modifier = Modifier
                         .padding(vertical = 2.dp),
-                    text = "출판사",
+                    text = stringResource(id = R.string.text_publisher) + bookData.publisher,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -103,7 +113,7 @@ fun BookDetailItemScreen(
                         modifier = Modifier
                             .padding(vertical = 2.dp)
                             .padding(end = 3.dp),
-                        text = "15000원",
+                        text = bookData.price.toString() + stringResource(id = R.string.text_won),
                         style = MaterialTheme.typography.bodySmall,
                     )
 
@@ -111,7 +121,7 @@ fun BookDetailItemScreen(
                         modifier = Modifier
                             .padding(vertical = 2.dp)
                             .padding(start = 3.dp),
-                        text = "12000원",
+                        text = bookData.salePrice.toString() + stringResource(id = R.string.text_won),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -122,7 +132,7 @@ fun BookDetailItemScreen(
         Text(
             modifier = Modifier
                 .padding(start = 20.dp, end = 20.dp, top = 20.dp),
-            text = "내용 입니다. 내용 입니다. 내용 입니다. 내용 입니다. 내용 입니다.",
+            text = bookData.contents,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
@@ -132,6 +142,20 @@ fun BookDetailItemScreen(
 @Composable
 fun PreviewBookDetailItemScreen(){
     BookDetailItemScreen(
-        modifier = Modifier
+        modifier = Modifier,
+        bookData = Document(
+            authors = listOf("저자1", "저자2"),
+            contents = "Cathy",
+            datetime = "Leighton",
+            isbn = "Phebe",
+            price = 6830,
+            publisher = "Ronaldo",
+            salePrice = 9515,
+            status = "Harriet",
+            thumbnail = "Miriam",
+            title = "Turquoise",
+            translators = listOf(),
+            url = "Jamecia"
+        )
     )
 }

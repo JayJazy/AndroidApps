@@ -6,12 +6,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
 fun BookSearchItemListScreen(
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
+    viewModel: BookViewModel = hiltViewModel()
 ) {
     Column(
         modifier = modifier,

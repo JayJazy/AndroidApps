@@ -20,7 +20,6 @@ fun BookItemListContent(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     innerPadding: PaddingValues,
-    isDetailScreen: Boolean,
     viewModel: BookViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
@@ -36,14 +35,16 @@ fun BookItemListContent(
         composable(BookNavItem.BookItemList.route) {
             BookItemListScreen(
                 modifier = modifier,
-                onItemClick = viewModel::onItemClick
+                onItemClick = viewModel::onItemClick,
+                viewModel = viewModel
             )
         }
 
         composable(BookNavItem.BookSearchItemList.route) {
             BookSearchItemListScreen(
                 modifier = modifier,
-                onItemClick = viewModel::onItemClick
+                onItemClick = viewModel::onItemClick,
+                viewModel = viewModel
             )
         }
 
@@ -51,6 +52,7 @@ fun BookItemListContent(
             BookDetailItemScreen(
                 modifier = modifier
                     .padding(innerPadding),
+                viewModel = viewModel
             )
         }
     }

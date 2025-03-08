@@ -21,16 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.home.component.BookItem
+import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun BookItemListScreen(
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
+    viewModel: BookViewModel = hiltViewModel()
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
+    val bookList by viewModel.bookList.collectAsStateWithLifecycle()
 
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
@@ -43,7 +48,9 @@ fun BookItemListScreen(
         modifier = modifier,
         isRefreshing = isRefreshing,
         onRefresh = { isRefreshing = true },
-        onItemClick = onItemClick
+        bookList = bookList,
+        onItemClick = onItemClick,
+        onItemSet = viewModel::setBookDetailItem
     )
 }
 
@@ -53,7 +60,9 @@ fun BookItemListScreen(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
+    bookList: List<Document>,
     onItemClick: (String) -> Unit,
+    onItemSet: (Document) -> Unit
 ) {
     val state = rememberPullToRefreshState()
     val gridState = rememberLazyGridState()
@@ -84,11 +93,15 @@ fun BookItemListScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
         ) {
             items(
-                count = 22,
-                key = { it }
+                count = bookList.size,
+                key = { index -> bookList[index].isbn }
             ) {
                 BookItem(
-                    onItemClick = onItemClick
+                    modifier = Modifier,
+                    bookData = bookList[it],
+                    onBookmarkClick = {},
+                    onItemClick = onItemClick,
+                    onItemSet = onItemSet
                 )
             }
         }
@@ -102,6 +115,8 @@ fun PreviewBookItemListScreen() {
         modifier = Modifier,
         isRefreshing = false,
         onRefresh = {},
-        onItemClick = {}
+        bookList = listOf(),
+        onItemClick = {},
+        onItemSet = {}
     )
 }

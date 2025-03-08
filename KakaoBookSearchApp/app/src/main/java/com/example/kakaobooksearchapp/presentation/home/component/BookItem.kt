@@ -20,25 +20,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.kakaobooksearchapp.R
+import com.example.kakaobooksearchapp.data.model.Document
+import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 
 @Composable
 fun BookItem(
     modifier: Modifier = Modifier,
-    model: String? = null,
-    title: String = "제목",
-    author: String = "저자",
+    bookData: Document,
     isBookmarked: Boolean = false,
     onBookmarkClick: () -> Unit = {},
     onItemClick: (String) -> Unit,
+    onItemSet: (Document) -> Unit
 ) {
     var isBookmark by remember { mutableStateOf(isBookmarked) }
     Column(
         modifier = modifier
-            .clickable { onItemClick("BookDetailItem") }
+            .clickable {
+                onItemSet(bookData)
+                onItemClick(BookNavItem.BookDetailItem.route)
+            }
     ) {
         Box(
             modifier = modifier
@@ -52,7 +58,7 @@ fun BookItem(
             AsyncImage(
                 modifier = modifier
                     .align(alignment = Alignment.Center),
-                model = model,
+                model = bookData.thumbnail,
                 placeholder = painterResource(id = R.drawable.loading_book),
                 error = painterResource(id = R.drawable.loading_book),
                 contentDescription = null
@@ -74,14 +80,21 @@ fun BookItem(
         Text(
             modifier = modifier
                 .padding(top = 4.dp, start = 4.dp),
-            text = title,
+            text = bookData.title,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium
         )
 
         Text(
             modifier = modifier
                 .padding(top = 2.dp, start = 4.dp),
-            text = author,
+            text = bookData.authors.joinToString(
+                separator = stringResource(id = R.string.text_comma),
+                prefix = stringResource(id = R.string.text_author)
+            ),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleSmall
         )
     }
@@ -92,9 +105,23 @@ fun BookItem(
 fun PreviewBookItem() {
     BookItem(
         modifier = Modifier,
-        model = null,
-        title = "제목",
-        author = "저자",
-        onItemClick = {}
+        onItemClick = {},
+        bookData = Document(
+            authors = listOf("저자1", "저자2"),
+            contents = "",
+            datetime = "",
+            isbn = "",
+            price = 0,
+            publisher = "",
+            salePrice = 0,
+            status = "",
+            thumbnail = "",
+            title = "제목 입니다.",
+            translators = listOf(),
+            url = ""
+        ),
+        isBookmarked = false,
+        onBookmarkClick = {},
+        onItemSet = {}
     )
 }

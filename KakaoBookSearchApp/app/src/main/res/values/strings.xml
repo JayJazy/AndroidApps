@@ -13,4 +13,12 @@
     <!-- 홈 화면 -->
     <string name="text_field_label">책 제목 및 저자를 입력하세요.</string>
     <string name="empty_search_text">검색 내용을 입력 입력하세요</string>
+    <string name="text_book_detail">책 세부정보</string>
+    <string name="home_book_query">kotlin</string>
+
+    <!-- 책 -->
+    <string name="text_comma">, </string>
+    <string name="text_author">저자 : </string>
+    <string name="text_publisher">출판사 : </string>
+    <string name="text_won">원</string>
 </resources>
