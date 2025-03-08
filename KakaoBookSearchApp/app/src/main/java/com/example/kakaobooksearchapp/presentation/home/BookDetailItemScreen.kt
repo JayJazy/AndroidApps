@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -15,15 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
+import com.example.kakaobooksearchapp.presentation.component.AsyncFailImage
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
@@ -55,7 +56,7 @@ fun BookDetailItemScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.Top,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             Box(
@@ -64,14 +65,11 @@ fun BookDetailItemScreen(
                     .padding(start = 20.dp)
                     .aspectRatio(0.7f)
             ) {
-                AsyncImage(
+                AsyncFailImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center),
-                    model = bookData.thumbnail,
-                    placeholder = painterResource(id = R.drawable.loading_book),
-                    error = painterResource(id = R.drawable.loading_book),
-                    contentDescription = null
+                    model = bookData.thumbnail
                 )
             }
 
@@ -129,9 +127,11 @@ fun BookDetailItemScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(30.dp))
+
         Text(
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+                .padding(horizontal = 20.dp),
             text = bookData.contents,
             style = MaterialTheme.typography.bodyMedium,
         )

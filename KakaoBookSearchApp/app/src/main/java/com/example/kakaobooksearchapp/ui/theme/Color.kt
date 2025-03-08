@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 val orange = Color(0xFFFFA500)
 val light_gray = Color(0xFFA9A9A9)
 val dark_bg = Color(0xFF353739)
-val image_bg = Color(0xFFD3D3D4)
+val image_bg = Color(0xFFE8E8E8)
 val light_line = Color(0xFFCBCBCB)
 val red = Color.Red
 
