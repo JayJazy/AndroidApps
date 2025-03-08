@@ -5,7 +5,5 @@ sealed class BookNavItem(
 ) {
     data object BookItemList: BookNavItem(route = "bookItemList")
 
-    data object BookSearchItemList: BookNavItem(route = "bookSearchItemList")
-
     data object BookDetailItem: BookNavItem(route = "bookDetailItem")
 }
