@@ -12,6 +12,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,13 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
     modifier: Modifier = Modifier,
     currentThemeMode: ThemeMode,
-    onThemeModeChange: (ThemeMode) -> Unit
+    onThemeModeChange: (Boolean) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val radioOptions = listOf(
         ThemeMode.LIGHT to stringResource(id = R.string.light_theme),
         ThemeMode.DARK to stringResource(id = R.string.dark_theme)
@@ -42,7 +45,14 @@ fun SettingScreen(
                     .fillMaxWidth()
                     .selectable(
                         selected = currentThemeMode == mode,
-                        onClick = { onThemeModeChange(mode) }
+                        onClick = {
+                            scope.launch {
+                                when(mode) {
+                                    ThemeMode.LIGHT -> onThemeModeChange(false)
+                                    ThemeMode.DARK -> onThemeModeChange(true)
+                                }
+                            }
+                        }
                     )
                     .padding(horizontal = 100.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -50,7 +60,14 @@ fun SettingScreen(
             ) {
                 RadioButton(
                     selected = currentThemeMode == mode,
-                    onClick = { onThemeModeChange(mode) },
+                    onClick = {
+                        scope.launch {
+                            when(mode) {
+                                ThemeMode.LIGHT -> onThemeModeChange(false)
+                                ThemeMode.DARK -> onThemeModeChange(true)
+                            }
+                        }
+                    },
                     colors = RadioButtonColors(
                         selectedColor = MaterialTheme.colorScheme.onPrimary,
                         unselectedColor = MaterialTheme.colorScheme.surface,

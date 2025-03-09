@@ -19,7 +19,7 @@ fun KakaoBookContent(
     innerPadding: PaddingValues,
     navController: NavHostController,
     currentThemeMode: ThemeMode,
-    onThemeModeChange: (ThemeMode) -> Unit
+    onThemeModeChange: (Boolean) -> Unit
 ) {
     NavHost(
         navController = navController,
