@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            var selectedItemIndex by rememberSaveable { mutableIntStateOf(1) }
+            var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
             val isDarkMode by themeViewModel.isDarkMode.collectAsStateWithLifecycle(initialValue = false)
             var currentThemeMode by rememberSaveable { mutableStateOf(ThemeMode.LIGHT) }
             val borderColor = MaterialTheme.colorScheme.surfaceContainerHigh

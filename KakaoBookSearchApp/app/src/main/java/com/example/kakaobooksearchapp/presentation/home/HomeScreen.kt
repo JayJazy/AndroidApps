@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.kakaobooksearchapp.presentation.home.component.HomeTopBar
+import com.example.kakaobooksearchapp.presentation.component.HomeTopBar
 import com.example.kakaobooksearchapp.presentation.navigtation.BookItemListContent
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel

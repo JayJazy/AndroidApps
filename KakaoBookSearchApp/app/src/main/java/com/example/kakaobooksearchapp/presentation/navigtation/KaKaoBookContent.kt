@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.kakaobooksearchapp.presentation.bookmark.BookmarkScreen
 import com.example.kakaobooksearchapp.presentation.home.HomeScreen
 import com.example.kakaobooksearchapp.presentation.setting.SettingScreen
 import com.example.kakaobooksearchapp.presentation.navigtation.model.KakaoBookRoute
@@ -30,10 +29,6 @@ fun KakaoBookContent(
             HomeScreen(
                 modifier = modifier
             )
-        }
-
-        composable(route = KakaoBookRoute.Bookmark.route) {
-            BookmarkScreen()
         }
 
         composable(route = KakaoBookRoute.Setting.route) {

@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home.component
+package com.example.kakaobooksearchapp.presentation.component
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable

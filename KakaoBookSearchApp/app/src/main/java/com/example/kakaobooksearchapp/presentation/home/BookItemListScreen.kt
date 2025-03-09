@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.home.component.BookItem
+import com.example.kakaobooksearchapp.presentation.component.BookItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
 
@@ -99,7 +99,6 @@ fun BookItemListScreen(
                 BookItem(
                     modifier = Modifier,
                     bookData = bookList[it],
-                    onBookmarkClick = {},
                     onItemClick = onItemClick,
                     onItemSet = onItemSet
                 )

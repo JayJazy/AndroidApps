@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import com.example.kakaobooksearchapp.R
 
@@ -18,10 +17,6 @@ data class BottomAppBarNavItem(
 @Composable
 fun rememberBottomNavItems(): List<BottomAppBarNavItem> {
     return listOf(
-        BottomAppBarNavItem(
-            title = stringResource(id = R.string.bookmark),
-            icon = ImageVector.vectorResource(id = R.drawable.bookmark_filled)
-        ),
         BottomAppBarNavItem(
             title = stringResource(id = R.string.home),
             icon = Icons.Filled.Home
@@ -36,8 +31,6 @@ fun rememberBottomNavItems(): List<BottomAppBarNavItem> {
 sealed class KakaoBookRoute(
     val route: String
 ) {
-    data object Bookmark: KakaoBookRoute(route = "북마크")
-
     data object Home: KakaoBookRoute(route = "홈")
 
     data object Setting: KakaoBookRoute(route = "설정")
