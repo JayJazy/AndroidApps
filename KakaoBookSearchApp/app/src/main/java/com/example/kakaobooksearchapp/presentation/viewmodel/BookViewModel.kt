@@ -3,7 +3,7 @@ package com.example.kakaobooksearchapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.data.usecase.GetAllBookListUseCase
+import com.example.kakaobooksearchapp.data.usecase.GetBookListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookViewModel @Inject constructor(
-    private val getAllBookListUseCase: GetAllBookListUseCase
+    private val getBookListUseCase: GetBookListUseCase
 ): ViewModel() {
 
     init {
@@ -53,7 +53,7 @@ class BookViewModel @Inject constructor(
         size: Int = 10
     ) {
         viewModelScope.launch {
-            getAllBookListUseCase.getAllBookList(
+            getBookListUseCase.getBookList(
                 query = query,
                 page = page,
                 size = size

@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetAllBookListUseCase @Inject constructor(
+class GetBookListUseCase @Inject constructor(
     private val kakaoBookService: KakaoBookService,
 ) {
-    fun getAllBookList(
+    fun getBookList(
         query: String,
         page: Int,
         size: Int
