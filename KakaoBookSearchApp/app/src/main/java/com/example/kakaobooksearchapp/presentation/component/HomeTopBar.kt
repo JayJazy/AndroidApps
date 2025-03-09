@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
@@ -46,6 +48,9 @@ fun HomeTopBar(
     val context = LocalContext.current
     val emptySearchText = stringResource(id = R.string.empty_search_text)
     var isFocused by remember { mutableStateOf(false) }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     Row(
         modifier = modifier
@@ -77,7 +82,13 @@ fun HomeTopBar(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.primary,
                 ),
-                keyboardActions = KeyboardActions(onSearch = { onSearchClick(searchText) }),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onSearchClick(searchText)
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    },
+                ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 trailingIcon = {
                     if(isFocused && searchText.isNotEmpty()){
