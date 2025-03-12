@@ -30,7 +30,8 @@ fun HomeScreen(
             HomeTopBar(
                 modifier = modifier,
                 isDetailScreen = isDetailScreen,
-                onSearchClick = viewModel::getAllBookList,
+                setSearchText = viewModel::setSearchText,
+                onSearchClick = viewModel::getBookList,
                 onBackClick = { navController.navigateUp() }
             )
         }

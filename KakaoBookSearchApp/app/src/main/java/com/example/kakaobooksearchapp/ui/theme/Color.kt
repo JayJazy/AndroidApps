@@ -17,6 +17,8 @@ sealed class ThemeColors(
     val onSurface: Color,
     val text: Color,
     val secondary: Color,
+    val onErrorContainer: Color,
+    val error: Color,
 )  {
     data object Dark: ThemeColors(
         backGround = dark_bg,
@@ -25,7 +27,9 @@ sealed class ThemeColors(
         surfaceContainerHigh = light_line,
         onSurface = image_bg,
         text = Color.White,
-        secondary = red
+        secondary = red,
+        onErrorContainer = Color.White,
+        error = Color.Black
     )
     data object Light: ThemeColors(
         backGround = Color.White,
@@ -34,6 +38,8 @@ sealed class ThemeColors(
         surfaceContainerHigh = light_gray,
         onSurface = image_bg,
         text = Color.Black,
-        secondary = red
+        secondary = red,
+        onErrorContainer = Color.White,
+        error = Color.Black
     )
 }

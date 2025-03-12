@@ -43,6 +43,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         color = Color.LightGray
+    ),
+
+    displayMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
     )
 
 )

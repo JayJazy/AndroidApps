@@ -14,7 +14,7 @@ class GetBookListUseCase @Inject constructor(
         page: Int,
         size: Int
     ): Flow<KakaoBookResponse> = flow {
-        val response = kakaoBookService.getAllBookList(
+        val response = kakaoBookService.getBookList(
             query = query,
             page = page,
             size = size

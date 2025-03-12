@@ -1,6 +1,7 @@
 package com.example.kakaobooksearchapp.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -25,6 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.component.BookItem
+import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
+import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
 
@@ -35,7 +39,7 @@ fun BookItemListScreen(
     viewModel: BookViewModel = hiltViewModel()
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
-    val bookList by viewModel.bookList.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
@@ -44,14 +48,37 @@ fun BookItemListScreen(
         }
     }
 
-    BookItemListScreen(
-        modifier = modifier,
-        isRefreshing = isRefreshing,
-        onRefresh = { isRefreshing = true },
-        bookList = bookList,
-        onItemClick = onItemClick,
-        onItemSet = viewModel::setBookDetailItem
-    )
+    when (uiState) {
+        is BookListState.Loading -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("로딩중...")
+            }
+        }
+
+        is BookListState.Error -> {
+            ErrorDialog(
+                requestBookList = viewModel::requestBookList
+            )
+        }
+
+        is BookListState.Success -> {
+            val value = uiState as BookListState.Success
+
+            BookItemListScreen(
+                modifier = modifier,
+                isRefreshing = isRefreshing,
+                onRefresh = { isRefreshing = true },
+                bookList = value.bookList,
+                onItemClick = onItemClick,
+                onItemSet = viewModel::setBookDetailItem
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -11,7 +11,7 @@ interface KakaoBookService{
 
     @Headers("Authorization: KakaoAK $API_KEY")
     @GET("v3/search/book")
-    suspend fun getAllBookList(
+    suspend fun getBookList(
         @Query("query") query: String,
         @Query("page") page: Int,
         @Query("size") size: Int

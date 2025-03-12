@@ -41,6 +41,7 @@ import com.example.kakaobooksearchapp.R
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     isDetailScreen: Boolean,
+    setSearchText: (String) -> Unit,
     onSearchClick: (String) -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -84,6 +85,7 @@ fun HomeTopBar(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
+                        setSearchText(searchText)
                         onSearchClick(searchText)
                         keyboardController?.hide()
                         focusManager.clearFocus()
@@ -111,6 +113,7 @@ fun HomeTopBar(
                     .padding(top = 10.dp)
                     .clickable {
                         if(searchText.isNotEmpty()){
+                            setSearchText(searchText)
                             onSearchClick(searchText)
                         } else {
                             Toast.makeText(context, emptySearchText, Toast.LENGTH_SHORT).show()
@@ -143,6 +146,7 @@ fun PreviewHomeTopBar1(){
     HomeTopBar(
         modifier = Modifier,
         isDetailScreen = true,
+        setSearchText = {},
         onSearchClick = {},
         onBackClick = {},
     )
@@ -154,6 +158,7 @@ fun PreviewHomeTopBar2(){
     HomeTopBar(
         modifier = Modifier,
         isDetailScreen = false,
+        setSearchText = {},
         onSearchClick = {},
         onBackClick = {},
     )

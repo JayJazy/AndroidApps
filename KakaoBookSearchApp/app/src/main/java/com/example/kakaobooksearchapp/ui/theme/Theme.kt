@@ -17,7 +17,9 @@ private val DarkColorScheme = darkColorScheme(
     surfaceContainerHigh = ThemeColors.Dark.surfaceContainerHigh,
     onSurface = ThemeColors.Dark.onSurface,
     primary = ThemeColors.Dark.text,
-    secondary = ThemeColors.Dark.secondary
+    secondary = ThemeColors.Dark.secondary,
+    onErrorContainer = ThemeColors.Dark.onErrorContainer,
+    error = ThemeColors.Dark.error
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -27,7 +29,9 @@ private val LightColorScheme = lightColorScheme(
     surfaceContainerHigh = ThemeColors.Light.surfaceContainerHigh,
     onSurface = ThemeColors.Light.onSurface,
     primary = ThemeColors.Light.text,
-    secondary = ThemeColors.Light.secondary
+    secondary = ThemeColors.Light.secondary,
+    onErrorContainer = ThemeColors.Light.onErrorContainer,
+    error = ThemeColors.Light.error
 )
 
 @Composable
