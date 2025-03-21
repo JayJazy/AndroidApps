@@ -20,9 +20,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,10 +38,9 @@ import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
-import kotlinx.coroutines.delay
 
 @Composable
-fun BookItemListScreen(
+fun BookListScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: BookViewModel = hiltViewModel()
@@ -71,7 +67,7 @@ fun BookItemListScreen(
 
     when (uiState) {
         is BookListState.Loading -> {
-            BookItemListScreen(
+            BookListScreen(
                 modifier = modifier,
                 isShimmerEffect = true,
                 shimmerEffectModifier = shimmerEffectModifier,
@@ -91,7 +87,7 @@ fun BookItemListScreen(
         is BookListState.Success -> {
             val value = uiState as BookListState.Success
 
-            BookItemListScreen(
+            BookListScreen(
                 modifier = modifier,
                 isShimmerEffect = false,
                 isRefreshing = isRefreshing,
@@ -105,7 +101,7 @@ fun BookItemListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookItemListScreen(
+fun BookListScreen(
     modifier: Modifier = Modifier,
     isShimmerEffect: Boolean = false,
     shimmerEffectModifier: Modifier = Modifier,
@@ -177,7 +173,7 @@ fun BookItemListScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewBookItemListScreen() {
-    BookItemListScreen(
+    BookListScreen(
         modifier = Modifier,
         isShimmerEffect = true,
         shimmerEffectModifier = Modifier,

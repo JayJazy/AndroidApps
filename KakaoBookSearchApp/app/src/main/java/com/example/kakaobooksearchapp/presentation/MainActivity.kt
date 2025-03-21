@@ -24,11 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookContent
 import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSingleTop
 import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
+import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import com.example.kakaobooksearchapp.presentation.viewmodel.ThemeViewModel
 import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
@@ -110,7 +112,7 @@ class MainActivity : ComponentActivity() {
                         innerPadding = innerPadding,
                         navController = navController,
                         currentThemeMode = currentThemeMode,
-                        onThemeModeChange = themeViewModel::setDarkMode
+                        onThemeModeChange = themeViewModel::setDarkMode,
                     )
                 }
             }

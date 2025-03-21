@@ -7,18 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.kakaobooksearchapp.presentation.component.HomeTopBar
-import com.example.kakaobooksearchapp.presentation.navigtation.BookItemListContent
+import com.example.kakaobooksearchapp.presentation.navigtation.BookContent
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: BookViewModel = hiltViewModel()
+    viewModel: BookViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -36,11 +35,12 @@ fun HomeScreen(
             )
         }
     ) { innerPadding ->
-        BookItemListContent(
+        BookContent(
             modifier = modifier
                 .padding(top = innerPadding.calculateTopPadding() + 10.dp)
                 .fillMaxSize(),
             navController = navController,
+            viewModel = viewModel
         )
     }
 }
