@@ -7,6 +7,7 @@ import com.example.kakaobooksearchapp.data.usecase.GetBookListUseCase
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -33,13 +34,11 @@ class BookViewModel @Inject constructor(
         private set
 
     init {
-        uiState.value = BookListState.Loading
-
         viewModelScope.launch {
             getBookListUseCase.getBookList(
                 query = "kotlin",
                 page = 1,
-                size = 1
+                size = 10
             ).catch {
                 uiState.value = BookListState.Error
             }.collectLatest { response ->

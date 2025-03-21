@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,12 +26,14 @@ import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 @Composable
 fun BookItem(
     modifier: Modifier = Modifier,
+    isShimmerEffect: Boolean,
     bookData: Document,
     onItemClick: (String) -> Unit,
     onItemSet: (Document) -> Unit
 ) {
+    val shimmerModifier = if (isShimmerEffect) modifier else Modifier
     Column(
-        modifier = modifier
+        modifier = if (isShimmerEffect) Modifier else modifier
             .clickable {
                 onItemSet(bookData)
                 onItemClick(BookNavItem.BookDetailItem.route)
@@ -42,29 +45,37 @@ fun BookItem(
                 .height(160.dp)
                 .clip(RoundedCornerShape(12.dp))
         ) {
-            AsyncFailImage(
-                modifier = modifier
-                    .fillMaxSize(),
-                model = bookData.thumbnail,
-                contentScale = ContentScale.Fit
-            )
+            if (!isShimmerEffect) {
+                AsyncFailImage(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    model = bookData.thumbnail,
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
 
+        if (isShimmerEffect) VerticalDivider(modifier = Modifier.padding(vertical = 2.dp))
+
         Text(
-            modifier = modifier
-                .padding(top = 4.dp, start = 4.dp),
+            modifier = shimmerModifier
+                .fillMaxWidth()
+                .padding(top = 2.dp, start = 4.dp),
             text = bookData.title,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium
         )
 
+        if (isShimmerEffect) VerticalDivider(modifier = Modifier.padding(vertical = 2.dp))
+
         Text(
-            modifier = modifier
+            modifier = shimmerModifier
+                .fillMaxWidth()
                 .padding(top = 2.dp, start = 4.dp),
             text = bookData.authors.joinToString(
                 separator = stringResource(id = R.string.text_comma),
-                prefix = stringResource(id = R.string.text_author)
+                prefix = if (isShimmerEffect) "" else stringResource(id = R.string.text_author)
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
@@ -78,6 +89,7 @@ fun BookItem(
 fun PreviewBookItem() {
     BookItem(
         modifier = Modifier,
+        isShimmerEffect = true,
         onItemClick = {},
         bookData = Document(
             authors = listOf("저자1", "저자2"),

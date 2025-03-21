@@ -1,15 +1,16 @@
 package com.example.kakaobooksearchapp.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -28,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.component.BookItem
 import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
+import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
@@ -50,14 +52,39 @@ fun BookItemListScreen(
 
     when (uiState) {
         is BookListState.Loading -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("로딩중...")
+            val shimmerBrush = shimmerEffect()
+            val shimmerEffect = Modifier
+                .background(
+                    shape = RoundedCornerShape(12.dp),
+                    brush = shimmerBrush
+                )
+            val dummyList = List(10) {
+                Document(
+                    authors = listOf(),
+                    contents = "",
+                    datetime = "",
+                    isbn = it.toString(),
+                    price = 0,
+                    publisher = "",
+                    salePrice = 0,
+                    status = "",
+                    thumbnail = "",
+                    title = "",
+                    translators = listOf(),
+                    url = ""
+                )
             }
+
+            BookItemListScreen(
+                modifier = modifier,
+                isShimmerEffect = true,
+                shimmerEffectModifier = shimmerEffect,
+                isRefreshing = isRefreshing,
+                onRefresh = { isRefreshing = true },
+                bookList = dummyList,
+                onItemClick = onItemClick,
+                onItemSet = viewModel::setBookDetailItem
+            )
         }
 
         is BookListState.Error -> {
@@ -71,6 +98,8 @@ fun BookItemListScreen(
 
             BookItemListScreen(
                 modifier = modifier,
+                isShimmerEffect = false,
+                shimmerEffectModifier = modifier,
                 isRefreshing = isRefreshing,
                 onRefresh = { isRefreshing = true },
                 bookList = value.bookList,
@@ -85,6 +114,8 @@ fun BookItemListScreen(
 @Composable
 fun BookItemListScreen(
     modifier: Modifier = Modifier,
+    isShimmerEffect: Boolean,
+    shimmerEffectModifier: Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     bookList: List<Document>,
@@ -115,7 +146,7 @@ fun BookItemListScreen(
                 .align(Alignment.TopCenter),
             columns = GridCells.Fixed(2),
             state = gridState,
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 20.dp),
+            contentPadding = PaddingValues(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
         ) {
@@ -124,7 +155,8 @@ fun BookItemListScreen(
                 key = { index -> bookList[index].isbn }
             ) {
                 BookItem(
-                    modifier = Modifier,
+                    modifier = if (isShimmerEffect) shimmerEffectModifier else modifier,
+                    isShimmerEffect = isShimmerEffect,
                     bookData = bookList[it],
                     onItemClick = onItemClick,
                     onItemSet = onItemSet
@@ -139,6 +171,8 @@ fun BookItemListScreen(
 fun PreviewBookItemListScreen() {
     BookItemListScreen(
         modifier = Modifier,
+        isShimmerEffect = true,
+        shimmerEffectModifier = Modifier,
         isRefreshing = false,
         onRefresh = {},
         bookList = listOf(),

@@ -17,6 +17,7 @@ coil = "2.6.0"
 hilt = "2.52"
 retrofit = "2.11.0"
 ksp = "2.0.20-1.0.24"
+shimmer = "0.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,7 @@ paging-common = {group = "androidx.paging", name = "paging-common", version.ref 
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging"}
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref="coroutines-core"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.5.0"}
+facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
 
 
 [plugins]
