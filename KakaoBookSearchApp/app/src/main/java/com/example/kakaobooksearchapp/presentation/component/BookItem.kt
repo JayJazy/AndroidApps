@@ -1,12 +1,15 @@
 package com.example.kakaobooksearchapp.presentation.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,14 +28,16 @@ import com.example.kakaobooksearchapp.data.model.Document
 @Composable
 fun BookItem(
     modifier: Modifier = Modifier,
-    isShimmerEffect: Boolean,
+    isShimmerEffect: Boolean = false,
     bookData: Document,
     onSetBookDetailItem: (Document) -> Unit
 ) {
     val shimmerModifier = if (isShimmerEffect) modifier else Modifier
+
     Column(
         modifier = if (isShimmerEffect) Modifier else modifier
-            .clickable { onSetBookDetailItem(bookData) }
+            .clickable { onSetBookDetailItem(bookData) },
+        verticalArrangement = Arrangement.Top
     ) {
         Box(
             modifier = modifier
@@ -50,7 +55,6 @@ fun BookItem(
             }
         }
 
-        if (isShimmerEffect) VerticalDivider(modifier = Modifier.padding(vertical = 2.dp))
 
         Text(
             modifier = shimmerModifier
@@ -62,7 +66,6 @@ fun BookItem(
             style = MaterialTheme.typography.titleMedium
         )
 
-        if (isShimmerEffect) VerticalDivider(modifier = Modifier.padding(vertical = 2.dp))
 
         Text(
             modifier = shimmerModifier
@@ -84,7 +87,7 @@ fun BookItem(
 fun PreviewBookItem() {
     BookItem(
         modifier = Modifier,
-        isShimmerEffect = true,
+        isShimmerEffect = false,
         bookData = Document(
             authors = listOf("저자1", "저자2"),
             contents = "",

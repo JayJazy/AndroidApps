@@ -28,7 +28,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopBar(
-                modifier = modifier,
+                modifier = Modifier,
                 isDetailScreen = isDetailScreen,
                 setSearchText = viewModel::setSearchText,
                 onSearchClick = viewModel::getBookList,
@@ -38,9 +38,8 @@ fun HomeScreen(
     ) { innerPadding ->
         BookItemListContent(
             modifier = modifier
-                .fillMaxSize()
-                .padding(top = 40.dp),
-            innerPadding = innerPadding,
+                .padding(top = innerPadding.calculateTopPadding() + 10.dp)
+                .fillMaxSize(),
             navController = navController,
         )
     }

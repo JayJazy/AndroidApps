@@ -32,7 +32,7 @@ import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
-import com.example.kakaobooksearchapp.presentation.model.dummyDocument
+import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
@@ -45,6 +45,13 @@ fun BookItemListScreen(
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val shimmerBrush = shimmerEffect()
+    val shimmerEffectModifier = Modifier
+        .background(
+            shape = RoundedCornerShape(12.dp),
+            brush = shimmerBrush
+        )
 
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
@@ -65,20 +72,13 @@ fun BookItemListScreen(
 
     when (uiState) {
         is BookListState.Loading -> {
-            val shimmerBrush = shimmerEffect()
-            val shimmerEffect = Modifier
-                .background(
-                    shape = RoundedCornerShape(12.dp),
-                    brush = shimmerBrush
-                )
-
             BookItemListScreen(
                 modifier = modifier,
                 isShimmerEffect = true,
-                shimmerEffectModifier = shimmerEffect,
+                shimmerEffectModifier = shimmerEffectModifier,
                 isRefreshing = isRefreshing,
                 onRefresh = { isRefreshing = true },
-                bookList = dummyDocument(),
+                bookList = dummyDocumentList(),
                 onSetBookDetailItem = viewModel::setBookDetailItem
             )
         }
@@ -95,7 +95,6 @@ fun BookItemListScreen(
             BookItemListScreen(
                 modifier = modifier,
                 isShimmerEffect = false,
-                shimmerEffectModifier = modifier,
                 isRefreshing = isRefreshing,
                 onRefresh = { isRefreshing = true },
                 bookList = value.bookList,
@@ -109,8 +108,8 @@ fun BookItemListScreen(
 @Composable
 fun BookItemListScreen(
     modifier: Modifier = Modifier,
-    isShimmerEffect: Boolean,
-    shimmerEffectModifier: Modifier,
+    isShimmerEffect: Boolean = false,
+    shimmerEffectModifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     bookList: List<Document>,
@@ -135,21 +134,21 @@ fun BookItemListScreen(
         ) }
     ) {
         LazyVerticalGrid(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.TopCenter),
             columns = GridCells.Fixed(2),
             state = gridState,
             contentPadding = PaddingValues(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+            verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically),
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(
                 count = bookList.size,
                 key = { index -> bookList[index].isbn }
             ) {
                 BookItem(
-                    modifier = if (isShimmerEffect) shimmerEffectModifier else modifier,
+                    modifier = if (isShimmerEffect) shimmerEffectModifier else Modifier,
                     isShimmerEffect = isShimmerEffect,
                     bookData = bookList[it],
                     onSetBookDetailItem = onSetBookDetailItem

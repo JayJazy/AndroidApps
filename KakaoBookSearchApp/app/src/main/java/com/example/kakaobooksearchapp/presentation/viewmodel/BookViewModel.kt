@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,6 +37,8 @@ class BookViewModel @Inject constructor(
                 size = 10
             ).catch {
                 uiState.value = BookListState.Error
+            }.onStart {
+                uiState.value = BookListState.Loading
             }.collectLatest { response ->
                 uiState.value = BookListState.Success(bookList = response.documents)
             }
@@ -71,9 +74,6 @@ class BookViewModel @Inject constructor(
         page: Int = 2,
         size: Int = 10
     ) {
-        val state = uiState.value
-        if (state !is BookListState.Success) return
-
         viewModelScope.launch {
             getBookListUseCase.getBookList(
                 query = query,
@@ -81,9 +81,19 @@ class BookViewModel @Inject constructor(
                 size = size
             ).catch {
                 uiState.value = BookListState.Error
+            }.onStart {
+                uiState.value = BookListState.Loading
             }.collectLatest { response ->
-                uiState.update {
-                    state.copy(
+                val state = uiState.value
+
+                if (state is BookListState.Success) {
+                    uiState.update {
+                        state.copy(
+                            bookList = response.documents
+                        )
+                    }
+                } else {
+                    uiState.value = BookListState.Success(
                         bookList = response.documents
                     )
                 }

@@ -1,6 +1,7 @@
 package com.example.kakaobooksearchapp.presentation.navigtation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,11 +24,13 @@ fun KakaoBookContent(
     NavHost(
         navController = navController,
         startDestination = KakaoBookRoute.Home.route,
-        modifier = modifier.padding(innerPadding)
+        modifier = modifier.fillMaxSize()
     ) {
         composable(route = KakaoBookRoute.Home.route) {
             HomeScreen(
                 modifier = modifier
+                    .fillMaxSize()
+                    .padding(bottom = innerPadding.calculateBottomPadding())
             )
         }
 

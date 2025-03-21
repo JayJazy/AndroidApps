@@ -1,5 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +28,10 @@ import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.component.AsyncFailImage
 import com.example.kakaobooksearchapp.presentation.component.ErrorScreen
+import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
+import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
+import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
@@ -36,9 +41,22 @@ fun BookDetailItemScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val shimmerBrush = shimmerEffect()
+    val shimmerEffectModifier = Modifier
+        .padding(start = 12.dp, end = 5.dp)
+        .background(
+            shape = RoundedCornerShape(12.dp),
+            brush = shimmerBrush
+        )
+
     when (uiState) {
         is BookListState.Loading -> {
-
+            BookDetailItemScreen(
+                modifier = modifier,
+                shimmerEffectModifier = shimmerEffectModifier,
+                isShimmerEffect = true,
+                bookData = dummyDocumentList().component1()
+            )
         }
 
         is BookListState.Error -> {
@@ -59,8 +77,21 @@ fun BookDetailItemScreen(
 @Composable
 fun BookDetailItemScreen(
     modifier: Modifier = Modifier,
+    shimmerEffectModifier: Modifier = Modifier,
+    isShimmerEffect: Boolean = false,
     bookData: Document
 ) {
+    val shimmerModifier = if (isShimmerEffect) {
+        shimmerEffectModifier
+    } else Modifier
+
+    val textShimmerModifier = if (isShimmerEffect) {
+        shimmerModifier
+            .fillMaxWidth()
+            .size(16.dp)
+    } else Modifier
+
+
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -74,17 +105,19 @@ fun BookDetailItemScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Box(
-                modifier = Modifier
+                modifier = shimmerModifier
                     .size(136.dp)
                     .padding(start = 20.dp)
                     .aspectRatio(0.7f)
             ) {
-                AsyncFailImage(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center),
-                    model = bookData.thumbnail
-                )
+                if (!isShimmerEffect) {
+                    AsyncFailImage(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center),
+                        model = bookData.thumbnail
+                    )
+                }
             }
 
             Column(
@@ -94,48 +127,55 @@ fun BookDetailItemScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    modifier = Modifier
+                    modifier = textShimmerModifier
                         .padding(vertical = 2.dp),
                     text = bookData.title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
+                ShimmerSpacer(isShimmerEffect = isShimmerEffect)
+
                 Text(
-                    modifier = Modifier
+                    modifier = textShimmerModifier
                         .padding(vertical = 2.dp),
                     text = bookData.authors.joinToString(
                         separator = stringResource(id = R.string.text_comma),
-                        prefix = stringResource(id = R.string.text_author)
+                        prefix = if (isShimmerEffect) "" else stringResource(id = R.string.text_author)
                     ),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
+                ShimmerSpacer(isShimmerEffect = isShimmerEffect)
+
                 Text(
-                    modifier = Modifier
+                    modifier = textShimmerModifier
                         .padding(vertical = 2.dp),
-                    text = stringResource(id = R.string.text_publisher) + bookData.publisher,
+                    text = if (isShimmerEffect) "" else stringResource(id = R.string.text_publisher) + bookData.publisher,
                     style = MaterialTheme.typography.bodyMedium
                 )
+
+                ShimmerSpacer(isShimmerEffect = isShimmerEffect)
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier
+                        modifier = textShimmerModifier
                             .padding(vertical = 2.dp)
                             .padding(end = 3.dp),
-                        text = bookData.price.toString() + stringResource(id = R.string.text_won),
+                        text = if (isShimmerEffect) "" else bookData.price.toString() + stringResource(id = R.string.text_won),
                         style = MaterialTheme.typography.bodySmall,
                     )
 
                     Text(
-                        modifier = Modifier
+                        modifier = textShimmerModifier
                             .padding(vertical = 2.dp)
                             .padding(start = 3.dp),
-                        text = bookData.salePrice.toString() + stringResource(id = R.string.text_won),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.secondary
+                        text = if (isShimmerEffect) "" else bookData.salePrice.toString() + stringResource(id = R.string.text_won),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.secondary
+                        ),
                     )
                 }
             }
@@ -144,11 +184,30 @@ fun BookDetailItemScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            modifier = Modifier
+            modifier = textShimmerModifier
                 .padding(horizontal = 20.dp),
             text = bookData.contents,
             style = MaterialTheme.typography.bodyMedium,
         )
+
+        if (isShimmerEffect) {
+
+            ShimmerSpacer(isShimmerEffect = true)
+
+            Text(
+                modifier = textShimmerModifier
+                    .padding(horizontal = 20.dp),
+                text = ""
+            )
+
+            ShimmerSpacer(isShimmerEffect = true)
+
+            Text(
+                modifier = textShimmerModifier
+                    .padding(horizontal = 20.dp),
+                text = ""
+            )
+        }
     }
 }
 

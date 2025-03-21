@@ -1,7 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.navigtation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,7 +16,6 @@ import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 fun BookItemListContent(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    innerPadding: PaddingValues,
     viewModel: BookViewModel = hiltViewModel()
 ) {
 
@@ -27,7 +25,8 @@ fun BookItemListContent(
     ) {
         composable(BookNavItem.BookItemList.route) {
             BookItemListScreen(
-                modifier = modifier,
+                modifier = modifier
+                    .fillMaxSize(),
                 navController = navController,
                 viewModel = viewModel
             )
@@ -36,7 +35,7 @@ fun BookItemListContent(
         composable(BookNavItem.BookDetailItem.route) {
             BookDetailItemScreen(
                 modifier = modifier
-                    .padding(innerPadding),
+                    .fillMaxSize(),
                 viewModel = viewModel
             )
         }

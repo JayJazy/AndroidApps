@@ -2,7 +2,7 @@ package com.example.kakaobooksearchapp.presentation.model
 
 import com.example.kakaobooksearchapp.data.model.Document
 
-fun dummyDocument(): List<Document> {
+fun dummyDocumentList(): List<Document> {
     val dummyList = List(10) {
         Document(
             authors = listOf(),
