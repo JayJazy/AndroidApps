@@ -25,6 +25,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.component.AsyncFailImage
+import com.example.kakaobooksearchapp.presentation.component.ErrorScreen
+import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
@@ -32,13 +34,25 @@ fun BookDetailItemScreen(
     modifier: Modifier = Modifier,
     viewModel: BookViewModel = hiltViewModel(),
 ) {
-    val bookData by viewModel.bookDetailItem.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    bookData?.let { data ->
-        BookDetailItemScreen(
-            modifier = modifier,
-            bookData = data
-        )
+    when (uiState) {
+        is BookListState.Loading -> {
+
+        }
+
+        is BookListState.Error -> {
+            ErrorScreen()
+        }
+
+        is BookListState.Success -> {
+            val value = uiState as BookListState.Success
+
+            BookDetailItemScreen(
+                modifier = modifier,
+                bookData = value.bookDetailItem ?: return
+            )
+        }
     }
 }
 

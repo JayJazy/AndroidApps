@@ -15,6 +15,7 @@ sealed class BookListState{
 
     @Immutable
     data class Success(
-        val bookList: List<Document> = emptyList()
+        val bookList: List<Document> = emptyList(),
+        val bookDetailItem: Document? = null
     ): BookListState()
 }

@@ -45,8 +45,9 @@ fun ErrorDialog(
         ) {
             Text(
                 text = stringResource(id = R.string.error_message),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.error
+                style = MaterialTheme.typography.displayMedium.copy(
+                    color = MaterialTheme.colorScheme.error
+                )
             )
 
             TextButton(
@@ -55,15 +56,16 @@ fun ErrorDialog(
                 onClick = { requestBookList() }) {
                 Text(
                     text = stringResource(id = R.string.error_confirm),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onPrimary
+                    ),
                 )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun PreviewErrorDialog(){
     ErrorDialog(

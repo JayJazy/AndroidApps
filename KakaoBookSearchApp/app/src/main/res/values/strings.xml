@@ -19,6 +19,7 @@
     <string name="home_book_query">kotlin</string>
 
     <!-- 책 -->
+    <string name="error_detail">책을 불러오는데 오류가 발생 했습니다.</string>
     <string name="text_comma">, </string>
     <string name="text_author">저자 : </string>
     <string name="text_publisher">출판사 : </string>

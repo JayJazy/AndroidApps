@@ -21,23 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 
 @Composable
 fun BookItem(
     modifier: Modifier = Modifier,
     isShimmerEffect: Boolean,
     bookData: Document,
-    onItemClick: (String) -> Unit,
-    onItemSet: (Document) -> Unit
+    onSetBookDetailItem: (Document) -> Unit
 ) {
     val shimmerModifier = if (isShimmerEffect) modifier else Modifier
     Column(
         modifier = if (isShimmerEffect) Modifier else modifier
-            .clickable {
-                onItemSet(bookData)
-                onItemClick(BookNavItem.BookDetailItem.route)
-            }
+            .clickable { onSetBookDetailItem(bookData) }
     ) {
         Box(
             modifier = modifier
@@ -90,7 +85,6 @@ fun PreviewBookItem() {
     BookItem(
         modifier = Modifier,
         isShimmerEffect = true,
-        onItemClick = {},
         bookData = Document(
             authors = listOf("저자1", "저자2"),
             contents = "",
@@ -105,6 +99,6 @@ fun PreviewBookItem() {
             translators = listOf(),
             url = ""
         ),
-        onItemSet = {}
+        onSetBookDetailItem = {}
     )
 }

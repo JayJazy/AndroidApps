@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -26,18 +25,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.presentation.component.BookItem
 import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
+import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
+import com.example.kakaobooksearchapp.presentation.model.dummyDocument
+import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun BookItemListScreen(
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit,
+    navController: NavHostController,
     viewModel: BookViewModel = hiltViewModel()
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
@@ -50,6 +53,16 @@ fun BookItemListScreen(
         }
     }
 
+    LaunchedEffect(viewModel.uiEffect) {
+        viewModel.uiEffect.collect { sideEffect ->
+            when (sideEffect) {
+                is BookListUiEffect.OnClickBookDetail -> {
+                    navController.navigate(BookNavItem.BookDetailItem.route)
+                }
+            }
+        }
+    }
+
     when (uiState) {
         is BookListState.Loading -> {
             val shimmerBrush = shimmerEffect()
@@ -58,22 +71,6 @@ fun BookItemListScreen(
                     shape = RoundedCornerShape(12.dp),
                     brush = shimmerBrush
                 )
-            val dummyList = List(10) {
-                Document(
-                    authors = listOf(),
-                    contents = "",
-                    datetime = "",
-                    isbn = it.toString(),
-                    price = 0,
-                    publisher = "",
-                    salePrice = 0,
-                    status = "",
-                    thumbnail = "",
-                    title = "",
-                    translators = listOf(),
-                    url = ""
-                )
-            }
 
             BookItemListScreen(
                 modifier = modifier,
@@ -81,9 +78,8 @@ fun BookItemListScreen(
                 shimmerEffectModifier = shimmerEffect,
                 isRefreshing = isRefreshing,
                 onRefresh = { isRefreshing = true },
-                bookList = dummyList,
-                onItemClick = onItemClick,
-                onItemSet = viewModel::setBookDetailItem
+                bookList = dummyDocument(),
+                onSetBookDetailItem = viewModel::setBookDetailItem
             )
         }
 
@@ -103,8 +99,7 @@ fun BookItemListScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = { isRefreshing = true },
                 bookList = value.bookList,
-                onItemClick = onItemClick,
-                onItemSet = viewModel::setBookDetailItem
+                onSetBookDetailItem = viewModel::setBookDetailItem
             )
         }
     }
@@ -119,8 +114,7 @@ fun BookItemListScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     bookList: List<Document>,
-    onItemClick: (String) -> Unit,
-    onItemSet: (Document) -> Unit
+    onSetBookDetailItem: (Document) -> Unit
 ) {
     val state = rememberPullToRefreshState()
     val gridState = rememberLazyGridState()
@@ -158,8 +152,7 @@ fun BookItemListScreen(
                     modifier = if (isShimmerEffect) shimmerEffectModifier else modifier,
                     isShimmerEffect = isShimmerEffect,
                     bookData = bookList[it],
-                    onItemClick = onItemClick,
-                    onItemSet = onItemSet
+                    onSetBookDetailItem = onSetBookDetailItem
                 )
             }
         }
@@ -176,7 +169,6 @@ fun PreviewBookItemListScreen() {
         isRefreshing = false,
         onRefresh = {},
         bookList = listOf(),
-        onItemClick = {},
-        onItemSet = {}
+        onSetBookDetailItem = {}
     )
 }

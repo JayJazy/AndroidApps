@@ -3,7 +3,6 @@ package com.example.kakaobooksearchapp.presentation.navigtation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -21,11 +20,6 @@ fun BookItemListContent(
     innerPadding: PaddingValues,
     viewModel: BookViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(true) {
-        viewModel.onClickItem.collect { route ->
-            navController.navigate(route)
-        }
-    }
 
     NavHost(
         navController = navController,
@@ -34,7 +28,7 @@ fun BookItemListContent(
         composable(BookNavItem.BookItemList.route) {
             BookItemListScreen(
                 modifier = modifier,
-                onItemClick = viewModel::onItemClick,
+                navController = navController,
                 viewModel = viewModel
             )
         }
