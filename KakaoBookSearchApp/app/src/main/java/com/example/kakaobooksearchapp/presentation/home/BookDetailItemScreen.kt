@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.component.AsyncFailImage
+import com.example.kakaobooksearchapp.presentation.component.AsyncImageHandleItem
 import com.example.kakaobooksearchapp.presentation.component.ErrorScreen
 import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
@@ -55,7 +55,7 @@ fun BookDetailItemScreen(
                 modifier = modifier,
                 shimmerEffectModifier = shimmerEffectModifier,
                 isShimmerEffect = true,
-                bookData = dummyDocumentList().component1()
+                bookData = dummyDocumentList()
             )
         }
 
@@ -111,7 +111,7 @@ fun BookDetailItemScreen(
                     .aspectRatio(0.7f)
             ) {
                 if (!isShimmerEffect) {
-                    AsyncFailImage(
+                    AsyncImageHandleItem(
                         modifier = Modifier
                             .fillMaxSize()
                             .align(Alignment.Center),

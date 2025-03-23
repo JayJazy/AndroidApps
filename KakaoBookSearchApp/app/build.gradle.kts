@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +21,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        if (rootProject.file("local.properties").exists()) {
+            properties.load(rootProject.file("local.properties").reader())
+        }
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY", "")}\"")
     }
 
     buildTypes {
@@ -39,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     hilt{
@@ -95,6 +104,11 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.room.paging)
+
+    // paging
+    implementation(libs.paging.compose)
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.common)
 
     // shimmer
     implementation(libs.facebook.shimmer)

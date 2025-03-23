@@ -1,5 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.component
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -85,8 +86,13 @@ fun HomeTopBar(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        setSearchText(searchText)
-                        onSearchClick(searchText)
+                        searchClick(
+                            context = context,
+                            searchText = searchText,
+                            emptySearchText = emptySearchText,
+                            setSearchText = setSearchText,
+                            onSearchClick = onSearchClick
+                        )
                         keyboardController?.hide()
                         focusManager.clearFocus()
                     },
@@ -99,6 +105,7 @@ fun HomeTopBar(
                                 .size(16.dp)
                                 .clickable {
                                     searchText = ""
+                                    setSearchText(searchText)
                                 },
                             imageVector = ImageVector.vectorResource(id = R.drawable.cancel),
                             contentDescription = null
@@ -112,12 +119,13 @@ fun HomeTopBar(
                     .padding(horizontal = 10.dp)
                     .padding(top = 10.dp)
                     .clickable {
-                        if(searchText.isNotEmpty()){
-                            setSearchText(searchText)
-                            onSearchClick(searchText)
-                        } else {
-                            Toast.makeText(context, emptySearchText, Toast.LENGTH_SHORT).show()
-                        }
+                        searchClick(
+                            context = context,
+                            searchText = searchText,
+                            emptySearchText = emptySearchText,
+                            setSearchText = setSearchText,
+                            onSearchClick = onSearchClick
+                        )
                     },
                 imageVector = Icons.Filled.Search,
                 contentDescription = null
@@ -138,6 +146,19 @@ fun HomeTopBar(
             )
         }
     }
+}
+
+private fun searchClick(
+    context: Context,
+    searchText: String,
+    emptySearchText: String,
+    setSearchText: (String) -> Unit,
+    onSearchClick: (String) -> Unit
+) {
+    setSearchText(searchText)
+
+    if (searchText.isNotEmpty()) onSearchClick(searchText)
+    else Toast.makeText(context, emptySearchText, Toast.LENGTH_SHORT).show()
 }
 
 @Preview

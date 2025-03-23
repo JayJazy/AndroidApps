@@ -1,15 +1,17 @@
 package com.example.kakaobooksearchapp.data.service
 
+import com.example.kakaobooksearchapp.BuildConfig
 import com.example.kakaobooksearchapp.data.model.KakaoBookResponse
-import com.example.kakaobooksearchapp.data.module.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
+const val api_key = BuildConfig.API_KEY
+
 interface KakaoBookService{
 
-    @Headers("Authorization: KakaoAK $API_KEY")
+    @Headers("Authorization: KakaoAK $api_key")
     @GET("v3/search/book")
     suspend fun getBookList(
         @Query("query") query: String,

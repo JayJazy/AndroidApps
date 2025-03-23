@@ -26,7 +26,7 @@ import coil.compose.AsyncImagePainter
 import com.example.kakaobooksearchapp.R
 
 @Composable
-fun AsyncFailImage(
+fun AsyncImageHandleItem(
     model: String,
     modifier : Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
@@ -84,7 +84,7 @@ fun ImageLoadingItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewImageLoadingItem(){
-    AsyncFailImage(
+    AsyncImageHandleItem(
         modifier = Modifier,
         model = ""
     )

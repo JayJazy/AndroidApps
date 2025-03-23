@@ -2,6 +2,7 @@ package com.example.kakaobooksearchapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -24,13 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookContent
 import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSingleTop
 import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
-import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import com.example.kakaobooksearchapp.presentation.viewmodel.ThemeViewModel
 import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
@@ -115,6 +114,10 @@ class MainActivity : ComponentActivity() {
                         onThemeModeChange = themeViewModel::setDarkMode,
                     )
                 }
+            }
+
+            BackHandler {
+                finishAffinity()
             }
         }
     }

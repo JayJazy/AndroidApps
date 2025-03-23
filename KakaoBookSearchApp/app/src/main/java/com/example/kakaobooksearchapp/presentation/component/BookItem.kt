@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +44,7 @@ fun BookItem(
                 .clip(RoundedCornerShape(12.dp))
         ) {
             if (!isShimmerEffect) {
-                AsyncFailImage(
+                AsyncImageHandleItem(
                     modifier = Modifier
                         .fillMaxSize(),
                     model = bookData.thumbnail,
@@ -52,6 +53,7 @@ fun BookItem(
             }
         }
 
+        if (isShimmerEffect) Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             modifier = shimmerModifier
@@ -63,6 +65,7 @@ fun BookItem(
             style = MaterialTheme.typography.titleMedium
         )
 
+        if (isShimmerEffect) Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             modifier = shimmerModifier

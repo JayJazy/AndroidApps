@@ -1,7 +1,9 @@
 package com.example.kakaobooksearchapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.data.usecase.GetBookListUseCase
 import com.example.kakaobooksearchapp.presentation.model.BookListState
@@ -11,8 +13,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,17 +35,21 @@ class BookViewModel @Inject constructor(
         private set
 
     init {
+        uiState.value = BookListState.Loading
+        initData()
+    }
+
+    private fun initData(){
         viewModelScope.launch {
-            getBookListUseCase.getBookList(
-                query = "kotlin",
-                page = 1,
-                size = 10
-            ).catch {
+            try{
+                uiState.value = BookListState.Success(
+                    bookList = getBookListUseCase.getBookList(
+                        query = "kotlin"
+                    ).cachedIn(viewModelScope)
+                )
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error initData: ${e.message}")
                 uiState.value = BookListState.Error
-            }.onStart {
-                uiState.value = BookListState.Loading
-            }.collectLatest { response ->
-                uiState.value = BookListState.Success(bookList = response.documents)
             }
         }
     }
@@ -65,49 +69,40 @@ class BookViewModel @Inject constructor(
         if (state !is BookListState.Success) return
 
         viewModelScope.launch {
+            uiEffect.emit(BookListUiEffect.OnClickBookDetail(document))
+
             uiState.update {
                 state.copy(
                     bookDetailItem = document
                 )
             }
-            uiEffect.emit(BookListUiEffect.OnClickBookDetail(document))
         }
     }
 
-    fun getBookList(
-        query: String,
-        page: Int = 2,
-        size: Int = 10
-    ) {
-        viewModelScope.launch {
-            getBookListUseCase.getBookList(
-                query = query,
-                page = page,
-                size = size
-            ).catch {
-                uiState.value = BookListState.Error
-            }.onStart {
-                if (isRefreshing.value) {
-                    _isRefreshing.value = true
-                } else {
-                    uiState.value = BookListState.Loading
-                }
-            }.onCompletion {
-                _isRefreshing.value = false
-            }.collectLatest { response ->
-                val state = uiState.value
+    fun getBookList(query: String) {
+        _isRefreshing.value = true
 
-                if (state is BookListState.Success) {
-                    uiState.update {
-                        state.copy(
-                            bookList = response.documents
-                        )
-                    }
-                } else {
-                    uiState.value = BookListState.Success(
-                        bookList = response.documents
+        val state = uiState.value
+        if (state !is BookListState.Success) return
+
+        viewModelScope.launch {
+            try {
+                uiState.update {
+                    state.copy(
+                        bookList = getBookListUseCase.getBookList(
+                            query = query
+                        ).cachedIn(viewModelScope).catch {
+                            _isRefreshing.value = false
+                            throw it
+                        }.onStart {
+                            _isRefreshing.value = false
+                        }
                     )
                 }
+            } catch(e: Exception) {
+                Log.e("ViewModel", "Error getBookList: ${e.message}")
+                _isRefreshing.value = false
+                uiState.value = BookListState.Error
             }
         }
     }

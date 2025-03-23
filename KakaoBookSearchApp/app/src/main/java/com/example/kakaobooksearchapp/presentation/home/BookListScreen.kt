@@ -1,19 +1,16 @@
 package com.example.kakaobooksearchapp.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -22,22 +19,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.kakaobooksearchapp.R
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.component.BookItem
 import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
+import com.example.kakaobooksearchapp.presentation.home.item.emptyBook
+import com.example.kakaobooksearchapp.presentation.home.item.existBook
+import com.example.kakaobooksearchapp.presentation.home.item.shimmerBook
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun BookListScreen(
@@ -59,7 +59,9 @@ fun BookListScreen(
         viewModel.uiEffect.collect { sideEffect ->
             when (sideEffect) {
                 is BookListUiEffect.OnClickBookDetail -> {
-                    navController.navigate(BookNavItem.BookDetailItem.route)
+                    navController.navigate(BookNavItem.BookDetailItem.route){
+                        launchSingleTop = true
+                    }
                 }
             }
         }
@@ -67,13 +69,14 @@ fun BookListScreen(
 
     when (uiState) {
         is BookListState.Loading -> {
+            Log.d("dudtjr", "실행")
             BookListScreen(
                 modifier = modifier,
                 isShimmerEffect = true,
                 shimmerEffectModifier = shimmerEffectModifier,
                 isRefreshing = isRefreshing,
-                onRefresh = {},
-                bookList = dummyDocumentList(),
+                onRefresh = viewModel::requestBookList,
+                bookList = emptyFlow<PagingData<Document>>().collectAsLazyPagingItems(),
                 onSetBookDetailItem = {}
             )
         }
@@ -89,15 +92,15 @@ fun BookListScreen(
 
             BookListScreen(
                 modifier = modifier,
-                isShimmerEffect = false,
                 isRefreshing = isRefreshing,
                 onRefresh = viewModel::requestBookList,
-                bookList = value.bookList,
+                bookList = value.bookList.collectAsLazyPagingItems(),
                 onSetBookDetailItem = viewModel::setBookDetailItem
             )
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +110,7 @@ fun BookListScreen(
     shimmerEffectModifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    bookList: List<Document>,
+    bookList: LazyPagingItems<Document>,
     onSetBookDetailItem: (Document) -> Unit
 ) {
     val state = rememberPullToRefreshState()
@@ -138,48 +141,22 @@ fun BookListScreen(
             verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            if (bookList.isNotEmpty()) {
-                items(
-                    count = bookList.size,
-                    key = { index -> bookList[index].isbn }
-                ) {
-                    BookItem(
-                        modifier = if (isShimmerEffect) shimmerEffectModifier else Modifier,
-                        isShimmerEffect = isShimmerEffect,
-                        bookData = bookList[it],
+            if (isShimmerEffect) {
+                shimmerBook(
+                    modifier = shimmerEffectModifier,
+                    bookData = dummyDocumentList(),
+                    onSetBookDetailItem = onSetBookDetailItem
+                )
+            } else {
+                if (bookList.itemCount > 0) {
+                    existBook(
+                        itemCount = bookList.itemCount,
+                        bookList = bookList,
                         onSetBookDetailItem = onSetBookDetailItem
                     )
                 }
-            } else {
-                item (span = { GridItemSpan(maxLineSpan) }) {
-                    Column(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.empty_book_list),
-                            style = MaterialTheme.typography.displayMedium
-                        )
-                    }
-                }
+                else emptyBook()
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewBookItemListScreen() {
-    BookListScreen(
-        modifier = Modifier,
-        isShimmerEffect = true,
-        shimmerEffectModifier = Modifier,
-        isRefreshing = false,
-        onRefresh = {},
-        bookList = listOf(),
-        onSetBookDetailItem = {}
-    )
 }

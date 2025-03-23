@@ -1,32 +1,34 @@
 package com.example.kakaobooksearchapp.data.usecase
 
-import com.example.kakaobooksearchapp.data.model.KakaoBookResponse
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.kakaobooksearchapp.data.datasource.room.BookDatabase
+import com.example.kakaobooksearchapp.data.datasource.BookRemoteMediator
+import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.data.service.KakaoBookService
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetBookListUseCase @Inject constructor(
     private val kakaoBookService: KakaoBookService,
+    private val bookDatabase: BookDatabase
 ) {
-    fun getBookList(
-        query: String,
-        page: Int,
-        size: Int
-    ): Flow<KakaoBookResponse> = flow {
-        val response = kakaoBookService.getBookList(
-            query = query,
-            page = page,
-            size = size
-        )
-        try{
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    emit(it)
-                }
+    @OptIn(ExperimentalPagingApi::class)
+    fun getBookList(query: String): Flow<PagingData<Document>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+            ),
+            remoteMediator = BookRemoteMediator(
+                kakaoBookService = kakaoBookService,
+                bookDatabase = bookDatabase,
+                query = query
+            ),
+            pagingSourceFactory = {
+                bookDatabase.bookDao().pagingSource()
             }
-        } catch(e : Exception) {
-            throw e
-        }
+        ).flow
     }
 }

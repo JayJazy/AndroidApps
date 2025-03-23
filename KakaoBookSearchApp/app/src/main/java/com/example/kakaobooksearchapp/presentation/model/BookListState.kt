@@ -2,7 +2,10 @@ package com.example.kakaobooksearchapp.presentation.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.paging.PagingData
 import com.example.kakaobooksearchapp.data.model.Document
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Stable
 sealed class BookListState{
@@ -15,7 +18,7 @@ sealed class BookListState{
 
     @Immutable
     data class Success(
-        val bookList: List<Document> = emptyList(),
+        val bookList: Flow<PagingData<Document>> = emptyFlow(),
         val bookDetailItem: Document? = null
     ): BookListState()
 }
