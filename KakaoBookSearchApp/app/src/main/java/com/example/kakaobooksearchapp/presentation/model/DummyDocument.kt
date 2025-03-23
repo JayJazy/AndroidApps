@@ -2,7 +2,7 @@ package com.example.kakaobooksearchapp.presentation.model
 
 import com.example.kakaobooksearchapp.data.model.Document
 
-fun dummyDocumentList(): Document {
+fun dummyDocument(): Document {
     return Document(
         authors = listOf(),
         contents = "",

@@ -69,7 +69,7 @@ class BookViewModel @Inject constructor(
         if (state !is BookListState.Success) return
 
         viewModelScope.launch {
-            uiEffect.emit(BookListUiEffect.OnClickBookDetail(document))
+            uiEffect.emit(BookListUiEffect.OnClickBookDetail)
 
             uiState.update {
                 state.copy(

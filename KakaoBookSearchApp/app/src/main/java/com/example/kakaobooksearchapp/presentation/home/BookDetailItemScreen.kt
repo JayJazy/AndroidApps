@@ -31,7 +31,7 @@ import com.example.kakaobooksearchapp.presentation.component.ErrorScreen
 import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
-import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
+import com.example.kakaobooksearchapp.presentation.model.dummyDocument
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
@@ -55,7 +55,7 @@ fun BookDetailItemScreen(
                 modifier = modifier,
                 shimmerEffectModifier = shimmerEffectModifier,
                 isShimmerEffect = true,
-                bookData = dummyDocumentList()
+                bookData = dummyDocument()
             )
         }
 

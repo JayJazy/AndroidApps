@@ -1,6 +1,5 @@
 package com.example.kakaobooksearchapp.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,7 +33,7 @@ import com.example.kakaobooksearchapp.presentation.home.item.existBook
 import com.example.kakaobooksearchapp.presentation.home.item.shimmerBook
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
-import com.example.kakaobooksearchapp.presentation.model.dummyDocumentList
+import com.example.kakaobooksearchapp.presentation.model.dummyDocument
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.flow.emptyFlow
@@ -59,8 +58,9 @@ fun BookListScreen(
         viewModel.uiEffect.collect { sideEffect ->
             when (sideEffect) {
                 is BookListUiEffect.OnClickBookDetail -> {
-                    navController.navigate(BookNavItem.BookDetailItem.route){
+                    navController.navigate(BookNavItem.BookDetailItem.route) {
                         launchSingleTop = true
+                        restoreState = true
                     }
                 }
             }
@@ -69,7 +69,6 @@ fun BookListScreen(
 
     when (uiState) {
         is BookListState.Loading -> {
-            Log.d("dudtjr", "실행")
             BookListScreen(
                 modifier = modifier,
                 isShimmerEffect = true,
@@ -144,7 +143,7 @@ fun BookListScreen(
             if (isShimmerEffect) {
                 shimmerBook(
                     modifier = shimmerEffectModifier,
-                    bookData = dummyDocumentList(),
+                    bookData = dummyDocument(),
                     onSetBookDetailItem = onSetBookDetailItem
                 )
             } else {
