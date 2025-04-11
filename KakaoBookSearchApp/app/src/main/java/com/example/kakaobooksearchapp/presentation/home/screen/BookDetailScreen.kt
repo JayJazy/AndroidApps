@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home
+package com.example.kakaobooksearchapp.presentation.home.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,40 +22,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.component.AsyncImageHandleItem
-import com.example.kakaobooksearchapp.presentation.component.ErrorScreen
+import com.example.kakaobooksearchapp.presentation.component.AsyncImageHandleComponent
 import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
-import com.example.kakaobooksearchapp.presentation.model.dummyDocument
+import com.example.kakaobooksearchapp.presentation.model.dummyBook
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
+
 @Composable
-fun BookDetailItemScreen(
+fun BookDetailScreen(
+    viewModel: BookViewModel,
     modifier: Modifier = Modifier,
-    viewModel: BookViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val shimmerBrush = shimmerEffect()
-    val shimmerEffectModifier = Modifier
-        .padding(start = 12.dp, end = 5.dp)
-        .background(
-            shape = RoundedCornerShape(12.dp),
-            brush = shimmerBrush
-        )
-
     when (uiState) {
         is BookListState.Loading -> {
-            BookDetailItemScreen(
+            BookDetailContent(
+                bookData = dummyBook(),
                 modifier = modifier,
-                shimmerEffectModifier = shimmerEffectModifier,
                 isShimmerEffect = true,
-                bookData = dummyDocument()
             )
         }
 
@@ -66,23 +56,27 @@ fun BookDetailItemScreen(
         is BookListState.Success -> {
             val value = uiState as BookListState.Success
 
-            BookDetailItemScreen(
-                modifier = modifier,
-                bookData = value.bookDetailItem ?: return
+            BookDetailContent(
+                bookData = value.bookDetail ?: dummyBook(),
+                modifier = modifier
             )
         }
     }
 }
 
 @Composable
-fun BookDetailItemScreen(
+fun BookDetailContent(
+    bookData: Document,
     modifier: Modifier = Modifier,
-    shimmerEffectModifier: Modifier = Modifier,
-    isShimmerEffect: Boolean = false,
-    bookData: Document
+    isShimmerEffect: Boolean = false
 ) {
     val shimmerModifier = if (isShimmerEffect) {
-        shimmerEffectModifier
+        Modifier
+            .padding(start = 12.dp, end = 5.dp)
+            .background(
+                shape = RoundedCornerShape(12.dp),
+                brush = shimmerEffect()
+            )
     } else Modifier
 
     val textShimmerModifier = if (isShimmerEffect) {
@@ -111,7 +105,7 @@ fun BookDetailItemScreen(
                     .aspectRatio(0.7f)
             ) {
                 if (!isShimmerEffect) {
-                    AsyncImageHandleItem(
+                    AsyncImageHandleComponent(
                         modifier = Modifier
                             .fillMaxSize()
                             .align(Alignment.Center),
@@ -213,8 +207,8 @@ fun BookDetailItemScreen(
 
 @Preview
 @Composable
-fun PreviewBookDetailItemScreen(){
-    BookDetailItemScreen(
+fun PreviewBookDetailContent(){
+    BookDetailContent(
         modifier = Modifier,
         bookData = Document(
             authors = listOf("저자1", "저자2"),

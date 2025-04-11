@@ -11,6 +11,7 @@ import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -24,32 +25,33 @@ class BookViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    var uiState = MutableStateFlow<BookListState>(BookListState.Loading)
-        private set
+    private val _uiState = MutableStateFlow<BookListState>(BookListState.Loading)
+    val uiState = _uiState.asStateFlow()
 
-    var uiEffect = MutableSharedFlow<BookListUiEffect>()
-        private set
+    private val _uiEffect = MutableSharedFlow<BookListUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
 
     init {
-        uiState.value = BookListState.Loading
+        _uiState.value = BookListState.Loading
         initData()
     }
 
     private fun initData(){
         viewModelScope.launch {
             try{
-                uiState.value = BookListState.Success(
+                _uiState.value = BookListState.Success(
                     bookList = getBookListUseCase.getBookList(
                         query = "kotlin"
                     ).cachedIn(viewModelScope)
                 )
             } catch (e: Exception) {
                 Log.e("ViewModel", "Error initData: ${e.message}")
-                uiState.value = BookListState.Error
+                _uiState.value = BookListState.Error
             }
         }
     }
@@ -58,39 +60,44 @@ class BookViewModel @Inject constructor(
         _searchText.value = searchText
     }
 
-    fun requestBookList() {
-        getBookList(
-            query = _searchText.value.ifEmpty { "kotlin" }
-        )
+    fun searchBookList(searchText: String) {
+        viewModelScope.launch {
+            if (searchText.isEmpty()) {
+                _uiEffect.emit(BookListUiEffect.ToastEmptySearchText)
+            } else {
+                _searchText.value = searchText
+                fetchBookList()
+            }
+        }
     }
 
-    fun setBookDetailItem(document: Document) {
+    fun updateSelectedBook(document: Document) {
         val state = uiState.value
         if (state !is BookListState.Success) return
 
         viewModelScope.launch {
-            uiEffect.emit(BookListUiEffect.OnClickBookDetail)
+            _uiEffect.emit(BookListUiEffect.OnClickBookDetail)
 
-            uiState.update {
+            _uiState.update {
                 state.copy(
-                    bookDetailItem = document
+                    bookDetail = document
                 )
             }
         }
     }
 
-    fun getBookList(query: String) {
+    fun fetchBookList() {
         _isRefreshing.value = true
 
-        val state = uiState.value
+        val state = _uiState.value
         if (state !is BookListState.Success) return
 
         viewModelScope.launch {
             try {
-                uiState.update {
+                _uiState.update {
                     state.copy(
                         bookList = getBookListUseCase.getBookList(
-                            query = query
+                            query = _searchText.value
                         ).cachedIn(viewModelScope).catch {
                             _isRefreshing.value = false
                             throw it
@@ -102,7 +109,7 @@ class BookViewModel @Inject constructor(
             } catch(e: Exception) {
                 Log.e("ViewModel", "Error getBookList: ${e.message}")
                 _isRefreshing.value = false
-                uiState.value = BookListState.Error
+                _uiState.value = BookListState.Error
             }
         }
     }

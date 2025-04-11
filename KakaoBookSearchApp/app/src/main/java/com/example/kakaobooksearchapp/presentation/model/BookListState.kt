@@ -19,6 +19,6 @@ sealed class BookListState{
     @Immutable
     data class Success(
         val bookList: Flow<PagingData<Document>> = emptyFlow(),
-        val bookDetailItem: Document? = null
+        val bookDetail: Document? = dummyBook()
     ): BookListState()
 }

@@ -26,11 +26,11 @@ import coil.compose.AsyncImagePainter
 import com.example.kakaobooksearchapp.R
 
 @Composable
-fun AsyncImageHandleItem(
+fun AsyncImageHandleComponent(
     model: String,
     modifier : Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
-    defaultImageSize: Dp = 65.dp,
+    defaultImageSize: Dp = 65.dp
 ) {
     var imageState by remember { mutableStateOf<AsyncImagePainter.State>(AsyncImagePainter.State.Empty) }
 
@@ -38,28 +38,30 @@ fun AsyncImageHandleItem(
         modifier = modifier
     ) {
         AsyncImage(
-            modifier = modifier,
             model = model,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize(),
             onState = { state ->
                 imageState = state
             },
-            contentDescription = null,
             contentScale = contentScale
         )
 
         if (imageState !is AsyncImagePainter.State.Success) {
-            ImageLoadingItem(
-                modifier = modifier,
-                defaultImageSize = defaultImageSize
+            ImageLoadingComponent(
+                defaultImageSize = defaultImageSize,
+                modifier = Modifier
+                    .fillMaxSize()
             )
         }
     }
 }
 
 @Composable
-fun ImageLoadingItem(
-    modifier: Modifier = Modifier,
+private fun ImageLoadingComponent(
     defaultImageSize: Dp,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -71,11 +73,11 @@ fun ImageLoadingItem(
             .padding(16.dp),
     ) {
         Icon(
+            painter = painterResource(id = R.drawable.loading_book),
+            contentDescription = null,
             modifier = Modifier
                 .size(defaultImageSize)
                 .align(Alignment.Center),
-            painter = painterResource(id = R.drawable.loading_book),
-            contentDescription = null,
             tint = Color.Unspecified
         )
     }
@@ -83,9 +85,8 @@ fun ImageLoadingItem(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewImageLoadingItem(){
-    AsyncImageHandleItem(
-        modifier = Modifier,
+fun PreviewAsyncImageHandleComponent(){
+    AsyncImageHandleComponent(
         model = ""
     )
 }

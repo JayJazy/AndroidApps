@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import com.example.kakaobooksearchapp.R
 import kotlinx.coroutines.delay
 
-fun LazyGridScope.emptyBook(){
-    item(span = { GridItemSpan(maxLineSpan) }) {
+fun LazyGridScope.emptyBookItem(){
 
+    item(span = { GridItemSpan(maxLineSpan) }) {
         var isVisible by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {

@@ -27,7 +27,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookContent
+import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookNavHost
 import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSingleTop
 import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
 import com.example.kakaobooksearchapp.presentation.viewmodel.ThemeViewModel
@@ -106,8 +106,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    KakaoBookContent(
-                        modifier = Modifier,
+                    KakaoBookNavHost(
                         innerPadding = innerPadding,
                         navController = navController,
                         currentThemeMode = currentThemeMode,

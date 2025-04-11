@@ -1,5 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,56 +24,69 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
+import com.example.kakaobooksearchapp.presentation.model.dummyBook
 
 @Composable
-fun BookItem(
+fun BookComponent(
+    bookDetail: Document,
+    onBookClick: (Document) -> Unit,
     modifier: Modifier = Modifier,
     isShimmerEffect: Boolean = false,
-    bookData: Document,
-    onSetBookDetailItem: (Document) -> Unit
 ) {
-    val shimmerModifier = if (isShimmerEffect) modifier else Modifier
+    val brush = if (isShimmerEffect) shimmerEffect() else SolidColor(Color.Transparent)
+    val shimmerHeight = if (isShimmerEffect) 4.dp else 0.dp
 
     Column(
-        modifier = if (isShimmerEffect) Modifier else modifier
-            .clickable { onSetBookDetailItem(bookData) },
+        modifier = modifier
+            .clickable { onBookClick(bookDetail) },
         verticalArrangement = Arrangement.Top
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
+                .background(
+                    brush = brush,
+                    shape = RoundedCornerShape(12.dp)
+                )
                 .fillMaxWidth()
                 .height(160.dp)
-                .clip(RoundedCornerShape(12.dp))
         ) {
             if (!isShimmerEffect) {
-                AsyncImageHandleItem(
+                AsyncImageHandleComponent(
+                    model = bookDetail.thumbnail,
                     modifier = Modifier
                         .fillMaxSize(),
-                    model = bookData.thumbnail,
                     contentScale = ContentScale.Fit
                 )
             }
         }
 
-        if (isShimmerEffect) Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(shimmerHeight))
 
         Text(
-            modifier = shimmerModifier
+            modifier = Modifier
+                .background(
+                    brush = brush,
+                    shape = RoundedCornerShape(12.dp)
+                )
                 .fillMaxWidth()
                 .padding(top = 2.dp, start = 4.dp),
-            text = bookData.title,
+            text = bookDetail.title,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleMedium
         )
 
-        if (isShimmerEffect) Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(shimmerHeight))
 
         Text(
-            modifier = shimmerModifier
+            modifier = Modifier
+                .background(
+                    brush = brush,
+                    shape = RoundedCornerShape(12.dp)
+                )
                 .fillMaxWidth()
                 .padding(top = 2.dp, start = 4.dp),
-            text = bookData.authors.joinToString(
+            text = bookDetail.authors.joinToString(
                 separator = stringResource(id = R.string.text_comma),
                 prefix = if (isShimmerEffect) "" else stringResource(id = R.string.text_author)
             ),
@@ -84,24 +99,10 @@ fun BookItem(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewBookItem() {
-    BookItem(
-        modifier = Modifier,
+fun PreviewBookComponent() {
+    BookComponent(
         isShimmerEffect = false,
-        bookData = Document(
-            authors = listOf("저자1", "저자2"),
-            contents = "",
-            datetime = "",
-            isbn = "",
-            price = 0,
-            publisher = "",
-            salePrice = 0,
-            status = "",
-            thumbnail = "",
-            title = "제목 입니다.",
-            translators = listOf(),
-            url = ""
-        ),
-        onSetBookDetailItem = {}
+        bookDetail = dummyBook(),
+        onBookClick = {}
     )
 }

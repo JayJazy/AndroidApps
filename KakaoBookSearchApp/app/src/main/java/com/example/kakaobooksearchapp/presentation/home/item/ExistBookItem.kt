@@ -3,22 +3,22 @@ package com.example.kakaobooksearchapp.presentation.home.item
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.paging.compose.LazyPagingItems
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.component.BookItem
+import com.example.kakaobooksearchapp.presentation.component.BookComponent
 
-fun LazyGridScope.existBook(
+fun LazyGridScope.existBookItem(
     itemCount: Int,
     bookList: LazyPagingItems<Document>,
-    onSetBookDetailItem: (Document) -> Unit
+    onBookClick: (Document) -> Unit
 ) {
     items(
         count = itemCount,
         key = { index -> bookList[index]?.isbn ?: index.toString() }
-    ) {
-        bookList[it]?.let { bookData ->
-            BookItem(
+    ) { index ->
+        bookList[index]?.let { bookDetail ->
+            BookComponent(
+                bookDetail = bookDetail,
+                onBookClick = onBookClick,
                 isShimmerEffect = false,
-                bookData = bookData,
-                onSetBookDetailItem = onSetBookDetailItem
             )
         }
     }

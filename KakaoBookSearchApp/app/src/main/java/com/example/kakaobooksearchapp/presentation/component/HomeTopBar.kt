@@ -1,7 +1,5 @@
 package com.example.kakaobooksearchapp.presentation.component
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -28,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -40,17 +37,14 @@ import com.example.kakaobooksearchapp.R
 
 @Composable
 fun HomeTopBar(
-    modifier: Modifier = Modifier,
     isDetailScreen: Boolean,
-    setSearchText: (String) -> Unit,
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
     onSearchClick: (String) -> Unit,
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var searchText by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    val emptySearchText = stringResource(id = R.string.empty_search_text)
     var isFocused by remember { mutableStateOf(false) }
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -72,7 +66,7 @@ fun HomeTopBar(
                 singleLine = false,
                 onValueChange = { inputText ->
                     if (inputText.length <= 40) {
-                        searchText = inputText
+                        onSearchTextChange(inputText)
                     }
                 },
                 label = {
@@ -86,27 +80,18 @@ fun HomeTopBar(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        searchClick(
-                            context = context,
-                            searchText = searchText,
-                            emptySearchText = emptySearchText,
-                            setSearchText = setSearchText,
-                            onSearchClick = onSearchClick
-                        )
+                        onSearchClick(searchText)
                         keyboardController?.hide()
                         focusManager.clearFocus()
                     },
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 trailingIcon = {
-                    if(isFocused && searchText.isNotEmpty()){
+                    if (isFocused && searchText.isNotEmpty()) {
                         Icon(
                             modifier = Modifier
                                 .size(16.dp)
-                                .clickable {
-                                    searchText = ""
-                                    setSearchText(searchText)
-                                },
+                                .clickable { onSearchTextChange("") },
                             imageVector = ImageVector.vectorResource(id = R.drawable.cancel),
                             contentDescription = null
                         )
@@ -118,15 +103,7 @@ fun HomeTopBar(
                     .size(72.dp)
                     .padding(horizontal = 10.dp)
                     .padding(top = 10.dp)
-                    .clickable {
-                        searchClick(
-                            context = context,
-                            searchText = searchText,
-                            emptySearchText = emptySearchText,
-                            setSearchText = setSearchText,
-                            onSearchClick = onSearchClick
-                        )
-                    },
+                    .clickable { onSearchClick(searchText) },
                 imageVector = Icons.Filled.Search,
                 contentDescription = null
             )
@@ -148,26 +125,14 @@ fun HomeTopBar(
     }
 }
 
-private fun searchClick(
-    context: Context,
-    searchText: String,
-    emptySearchText: String,
-    setSearchText: (String) -> Unit,
-    onSearchClick: (String) -> Unit
-) {
-    setSearchText(searchText)
-
-    if (searchText.isNotEmpty()) onSearchClick(searchText)
-    else Toast.makeText(context, emptySearchText, Toast.LENGTH_SHORT).show()
-}
-
 @Preview
 @Composable
-fun PreviewHomeTopBar1(){
+fun PreviewHomeTopBar1() {
     HomeTopBar(
         modifier = Modifier,
         isDetailScreen = true,
-        setSearchText = {},
+        searchText = "",
+        onSearchTextChange = {},
         onSearchClick = {},
         onBackClick = {},
     )
@@ -175,11 +140,12 @@ fun PreviewHomeTopBar1(){
 
 @Preview
 @Composable
-fun PreviewHomeTopBar2(){
+fun PreviewHomeTopBar2() {
     HomeTopBar(
         modifier = Modifier,
         isDetailScreen = false,
-        setSearchText = {},
+        searchText = "",
+        onSearchTextChange = {},
         onSearchClick = {},
         onBackClick = {},
     )

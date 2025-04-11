@@ -6,16 +6,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.kakaobooksearchapp.presentation.home.BookDetailItemScreen
-import com.example.kakaobooksearchapp.presentation.home.BookListScreen
+import com.example.kakaobooksearchapp.presentation.home.screen.BookDetailScreen
+import com.example.kakaobooksearchapp.presentation.home.screen.BookListScreen
 import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 @Composable
-fun BookContent(
-    modifier: Modifier = Modifier,
+fun BookNavHost(
     navController: NavHostController,
-    viewModel: BookViewModel
+    viewModel: BookViewModel,
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
@@ -23,18 +23,18 @@ fun BookContent(
     ) {
         composable(BookNavItem.BookItemList.route) {
             BookListScreen(
-                modifier = modifier
-                    .fillMaxSize(),
                 navController = navController,
-                viewModel = viewModel
+                viewModel = viewModel,
+                modifier = modifier
+                    .fillMaxSize()
             )
         }
 
         composable(BookNavItem.BookDetailItem.route) {
-            BookDetailItemScreen(
+            BookDetailScreen(
+                viewModel = viewModel,
                 modifier = modifier
-                    .fillMaxSize(),
-                viewModel = viewModel
+                    .fillMaxSize()
             )
         }
     }

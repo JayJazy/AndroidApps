@@ -24,9 +24,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
-    modifier: Modifier = Modifier,
     currentThemeMode: ThemeMode,
-    onThemeModeChange: (Boolean) -> Unit
+    onThemeModeChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val radioOptions = listOf(
@@ -94,7 +94,6 @@ fun SettingScreen(
 @Composable
 fun PreviewSettingScreen(){
     SettingScreen(
-        modifier = Modifier,
         currentThemeMode = ThemeMode.LIGHT,
         onThemeModeChange = { }
     )
