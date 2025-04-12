@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.paging.PagingData
 import com.example.kakaobooksearchapp.data.model.Document
+import com.example.kakaobooksearchapp.data.model.Document.Companion.dummyBook
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

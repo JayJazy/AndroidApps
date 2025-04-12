@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
-import com.example.kakaobooksearchapp.presentation.model.dummyBook
+import com.example.kakaobooksearchapp.data.model.Document.Companion.dummyBook
 
 @Composable
 fun BookComponent(

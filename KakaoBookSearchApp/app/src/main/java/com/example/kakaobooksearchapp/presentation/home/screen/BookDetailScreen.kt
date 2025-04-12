@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.kakaobooksearchapp.R
 import com.example.kakaobooksearchapp.data.model.Document
+import com.example.kakaobooksearchapp.data.model.Document.Companion.dummyBook
 import com.example.kakaobooksearchapp.presentation.component.AsyncImageHandleComponent
 import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
 import com.example.kakaobooksearchapp.presentation.model.BookListState
-import com.example.kakaobooksearchapp.presentation.model.dummyBook
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 
 
@@ -147,6 +147,15 @@ fun BookDetailContent(
                     modifier = textShimmerModifier
                         .padding(vertical = 2.dp),
                     text = if (isShimmerEffect) "" else stringResource(id = R.string.text_publisher) + bookData.publisher,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                ShimmerSpacer(isShimmerEffect = isShimmerEffect)
+
+                Text(
+                    modifier = textShimmerModifier
+                        .padding(vertical = 3.dp),
+                    text = if (isShimmerEffect) "" else stringResource(id = R.string.text_dateTime) + bookData.datetime,
                     style = MaterialTheme.typography.bodyMedium
                 )
 

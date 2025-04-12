@@ -11,12 +11,12 @@ import com.example.kakaobooksearchapp.data.service.KakaoBookService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetBookListUseCase @Inject constructor(
+class FetchBookListUseCase @Inject constructor(
     private val kakaoBookService: KakaoBookService,
     private val bookDatabase: BookDatabase
 ) {
     @OptIn(ExperimentalPagingApi::class)
-    fun getBookList(
+    fun fetchBookList(
         query: String,
         sort: String,
     ): Flow<PagingData<Document>> {

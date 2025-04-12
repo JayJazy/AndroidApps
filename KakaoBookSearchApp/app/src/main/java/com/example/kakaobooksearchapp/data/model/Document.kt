@@ -27,4 +27,23 @@ data class Document(
     val title: String,
     val translators: List<String>,
     val url: String
-)
+) {
+    companion object {
+        fun dummyBook(): Document {
+            return Document(
+                authors = listOf(),
+                contents = "",
+                datetime = "",
+                isbn = "0",
+                price = 0,
+                publisher = "",
+                salePrice = 0,
+                status = "",
+                thumbnail = "",
+                title = "",
+                translators = listOf(),
+                url = ""
+            )
+        }
+    }
+}

@@ -32,7 +32,7 @@ class BookRemoteMediator(
 
         try {
             val page = remoteKey?.nextPage ?: 0
-            val response = kakaoBookService.getBookList(
+            val response = kakaoBookService.fetchBookList(
                 query = query,
                 sort = sort,
                 page = page,
@@ -41,6 +41,12 @@ class BookRemoteMediator(
 
             val documents = response.body()?.documents ?: emptyList()
 
+            val formattedDocuments = documents.map { document ->
+                document.copy(
+                    datetime = formatDateTime(document.datetime)
+                )
+            }
+
             return if (response.isSuccessful) {
                 bookDatabase.withTransaction {
                     if (loadType == LoadType.REFRESH) {
@@ -48,9 +54,9 @@ class BookRemoteMediator(
                         keyDao.deleteRemoteKey()
                     }
                     keyDao.insertOrReplace(BookRemoteKey(nextPage = page +1))
-                    dao.insertAll(documents)
+                    dao.insertAll(formattedDocuments)
                 }
-                MediatorResult.Success(documents.size != state.config.pageSize)
+                MediatorResult.Success(formattedDocuments.size != state.config.pageSize)
             } else {
                 MediatorResult.Error(Exception("API 호출 실패: ${response.code()}"))
             }
