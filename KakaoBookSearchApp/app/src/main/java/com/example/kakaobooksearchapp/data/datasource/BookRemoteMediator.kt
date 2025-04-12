@@ -13,7 +13,8 @@ import com.example.kakaobooksearchapp.data.service.KakaoBookService
 class BookRemoteMediator(
     private val kakaoBookService: KakaoBookService,
     private val bookDatabase: BookDatabase,
-    private val query: String
+    private val query: String,
+    private val sort: String
 ): RemoteMediator<Int, Document>() {
 
     private val dao = bookDatabase.bookDao()
@@ -33,6 +34,7 @@ class BookRemoteMediator(
             val page = remoteKey?.nextPage ?: 0
             val response = kakaoBookService.getBookList(
                 query = query,
+                sort = sort,
                 page = page,
                 size = state.config.pageSize
             )

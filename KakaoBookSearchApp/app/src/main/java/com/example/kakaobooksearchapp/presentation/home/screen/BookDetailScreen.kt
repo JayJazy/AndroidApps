@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -159,7 +161,10 @@ fun BookDetailContent(
                             .padding(vertical = 2.dp)
                             .padding(end = 3.dp),
                         text = if (isShimmerEffect) "" else bookData.price.toString() + stringResource(id = R.string.text_won),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = colorResource(id = R.color.light_gray),
+                            textDecoration = TextDecoration.LineThrough
+                        ),
                     )
 
                     Text(

@@ -15,6 +15,7 @@ interface KakaoBookService{
     @GET("v3/search/book")
     suspend fun getBookList(
         @Query("query") query: String,
+        @Query("sort") sort: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<KakaoBookResponse>

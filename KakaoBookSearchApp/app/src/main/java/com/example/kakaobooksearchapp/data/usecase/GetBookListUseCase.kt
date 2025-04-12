@@ -16,7 +16,10 @@ class GetBookListUseCase @Inject constructor(
     private val bookDatabase: BookDatabase
 ) {
     @OptIn(ExperimentalPagingApi::class)
-    fun getBookList(query: String): Flow<PagingData<Document>> {
+    fun getBookList(
+        query: String,
+        sort: String,
+    ): Flow<PagingData<Document>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -24,7 +27,8 @@ class GetBookListUseCase @Inject constructor(
             remoteMediator = BookRemoteMediator(
                 kakaoBookService = kakaoBookService,
                 bookDatabase = bookDatabase,
-                query = query
+                query = query,
+                sort = sort
             ),
             pagingSourceFactory = {
                 bookDatabase.bookDao().pagingSource()

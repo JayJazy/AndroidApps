@@ -8,13 +8,13 @@ import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.data.usecase.GetBookListUseCase
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
+import com.example.kakaobooksearchapp.presentation.model.BookSortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,6 +27,9 @@ class BookViewModel @Inject constructor(
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
+
+    private val _selectedSortType = MutableStateFlow(BookSortType.Accuracy)
+    val selectedSortType = _selectedSortType.asStateFlow()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
@@ -43,6 +46,8 @@ class BookViewModel @Inject constructor(
         Log.e("ViewModel", "Error : $throwable")
     }
 
+    private var sortedText = "accuracy"
+
     init {
         _uiState.value = BookListState.Loading
         initData()
@@ -52,7 +57,8 @@ class BookViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             _uiState.value = BookListState.Success(
                 bookList = getBookListUseCase.getBookList(
-                    query = "kotlin"
+                    query = "kotlin",
+                    sort = sortedText
                 ).cachedIn(viewModelScope)
             )
         }
@@ -60,6 +66,14 @@ class BookViewModel @Inject constructor(
 
     fun setSearchText(searchText: String) {
         _searchText.value = searchText
+    }
+
+    fun updateBookList(sortText: String) {
+        when (sortText) {
+            BookSortType.Accuracy.value -> sortedText = "accuracy"
+            BookSortType.Latest.value -> sortedText = "latest"
+        }
+        fetchBookList()
     }
 
     fun searchBookList(searchText: String) {
@@ -98,7 +112,8 @@ class BookViewModel @Inject constructor(
             _uiState.update {
                 state.copy(
                     bookList = getBookListUseCase.getBookList(
-                        query = _searchText.value
+                        query = _searchText.value,
+                        sort = sortedText
                     ).cachedIn(viewModelScope).onStart {
                         _isRefreshing.value = false
                     }

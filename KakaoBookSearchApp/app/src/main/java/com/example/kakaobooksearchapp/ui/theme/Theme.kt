@@ -31,7 +31,8 @@ private val LightColorScheme = lightColorScheme(
     primary = ThemeColors.Light.text,
     secondary = ThemeColors.Light.secondary,
     onErrorContainer = ThemeColors.Light.onErrorContainer,
-    error = ThemeColors.Light.error
+    error = ThemeColors.Light.error,
+
 )
 
 @Composable
