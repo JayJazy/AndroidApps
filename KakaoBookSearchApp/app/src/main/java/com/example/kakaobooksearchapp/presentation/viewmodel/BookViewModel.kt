@@ -9,6 +9,7 @@ import com.example.kakaobooksearchapp.data.usecase.GetBookListUseCase
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -36,23 +37,24 @@ class BookViewModel @Inject constructor(
     private val _uiEffect = MutableSharedFlow<BookListUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _isRefreshing.value = false
+        _uiState.value = BookListState.Error
+        Log.e("ViewModel", "Error : $throwable")
+    }
+
     init {
         _uiState.value = BookListState.Loading
         initData()
     }
 
     private fun initData(){
-        viewModelScope.launch {
-            try{
-                _uiState.value = BookListState.Success(
-                    bookList = getBookListUseCase.getBookList(
-                        query = "kotlin"
-                    ).cachedIn(viewModelScope)
-                )
-            } catch (e: Exception) {
-                Log.e("ViewModel", "Error initData: ${e.message}")
-                _uiState.value = BookListState.Error
-            }
+        viewModelScope.launch(exceptionHandler) {
+            _uiState.value = BookListState.Success(
+                bookList = getBookListUseCase.getBookList(
+                    query = "kotlin"
+                ).cachedIn(viewModelScope)
+            )
         }
     }
 
@@ -75,7 +77,7 @@ class BookViewModel @Inject constructor(
         val state = uiState.value
         if (state !is BookListState.Success) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _uiEffect.emit(BookListUiEffect.OnClickBookDetail)
 
             _uiState.update {
@@ -87,29 +89,20 @@ class BookViewModel @Inject constructor(
     }
 
     fun fetchBookList() {
-        _isRefreshing.value = true
-
         val state = _uiState.value
         if (state !is BookListState.Success) return
 
-        viewModelScope.launch {
-            try {
-                _uiState.update {
-                    state.copy(
-                        bookList = getBookListUseCase.getBookList(
-                            query = _searchText.value
-                        ).cachedIn(viewModelScope).catch {
-                            _isRefreshing.value = false
-                            throw it
-                        }.onStart {
-                            _isRefreshing.value = false
-                        }
-                    )
-                }
-            } catch(e: Exception) {
-                Log.e("ViewModel", "Error getBookList: ${e.message}")
-                _isRefreshing.value = false
-                _uiState.value = BookListState.Error
+        _isRefreshing.value = true
+
+        viewModelScope.launch(exceptionHandler) {
+            _uiState.update {
+                state.copy(
+                    bookList = getBookListUseCase.getBookList(
+                        query = _searchText.value
+                    ).cachedIn(viewModelScope).onStart {
+                        _isRefreshing.value = false
+                    }
+                )
             }
         }
     }
