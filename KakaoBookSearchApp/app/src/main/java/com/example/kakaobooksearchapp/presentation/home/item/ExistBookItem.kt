@@ -8,7 +8,7 @@ import com.example.kakaobooksearchapp.presentation.component.BookComponent
 fun LazyGridScope.existBookItem(
     itemCount: Int,
     bookList: LazyPagingItems<Document>,
-    onBookClick: (Document) -> Unit
+    onBookClick: (Document) -> Unit,
 ) {
     items(
         count = itemCount,

@@ -1,5 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import android.util.Log
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +25,7 @@ class BookViewModel @Inject constructor(
     private val fetchBookListUseCase: FetchBookListUseCase
 ): ViewModel() {
 
-    private val _searchText = MutableStateFlow("")
+    private val _searchText = MutableStateFlow("kotlin")
     val searchText = _searchText.asStateFlow()
 
     private val _selectedSortType = MutableStateFlow(BookSortType.Accuracy)
@@ -57,7 +57,7 @@ class BookViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             _uiState.value = BookListState.Success(
                 bookList = fetchBookListUseCase.fetchBookList(
-                    query = "kotlin",
+                    query = _searchText.value,
                     sort = sortedText
                 ).cachedIn(viewModelScope)
             )
@@ -66,6 +66,22 @@ class BookViewModel @Inject constructor(
 
     fun setSearchText(searchText: String) {
         _searchText.value = searchText
+    }
+
+    fun searchBookList(searchText: String) {
+        viewModelScope.launch {
+            if (searchText.isEmpty()) {
+                _uiEffect.emit(BookListUiEffect.ToastEmptySearchText)
+            } else {
+                _searchText.value = searchText
+                fetchBookList()
+            }
+        }
+    }
+
+    fun initializeBookList() {
+        _searchText.value = "kotlin"
+        fetchBookList()
     }
 
     fun updateBookList(sortText: String) {
@@ -79,18 +95,12 @@ class BookViewModel @Inject constructor(
                 sortedText = "latest"
             }
         }
-        fetchBookList()
-    }
 
-    fun searchBookList(searchText: String) {
         viewModelScope.launch {
-            if (searchText.isEmpty()) {
-                _uiEffect.emit(BookListUiEffect.ToastEmptySearchText)
-            } else {
-                _searchText.value = searchText
-                fetchBookList()
-            }
+            _uiEffect.emit(BookListUiEffect.OnClickBookSort)
+            return@launch
         }
+        fetchBookList()
     }
 
     fun updateSelectedBook(document: Document) {

@@ -22,7 +22,7 @@ import com.example.kakaobooksearchapp.R
 
 @Composable
 fun ErrorDialog(
-    requestBookList: () -> Unit
+    onRequestClick: () -> Unit
 ) {
     Dialog(
         onDismissRequest = { },
@@ -53,7 +53,7 @@ fun ErrorDialog(
             TextButton(
                 modifier = Modifier
                     .align(Alignment.End),
-                onClick = { requestBookList() }) {
+                onClick = { onRequestClick() }) {
                 Text(
                     text = stringResource(id = R.string.error_confirm),
                     style = MaterialTheme.typography.titleMedium.copy(
@@ -69,6 +69,6 @@ fun ErrorDialog(
 @Composable
 fun PreviewErrorDialog(){
     ErrorDialog(
-        requestBookList = {}
+        onRequestClick = {}
     )
 }

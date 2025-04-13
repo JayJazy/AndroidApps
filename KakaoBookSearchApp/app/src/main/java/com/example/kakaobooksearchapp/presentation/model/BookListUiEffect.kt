@@ -10,4 +10,7 @@ sealed interface BookListUiEffect {
 
     @Immutable
     data object OnClickBookDetail: BookListUiEffect
+
+    @Immutable
+    data object OnClickBookSort: BookListUiEffect
 }

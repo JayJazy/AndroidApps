@@ -22,7 +22,8 @@ class FetchBookListUseCase @Inject constructor(
     ): Flow<PagingData<Document>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = 20,
+                enablePlaceholders = true
             ),
             remoteMediator = BookRemoteMediator(
                 kakaoBookService = kakaoBookService,

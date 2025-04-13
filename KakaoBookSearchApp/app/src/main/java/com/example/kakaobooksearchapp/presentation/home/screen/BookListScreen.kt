@@ -16,13 +16,16 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -40,36 +43,53 @@ import com.example.kakaobooksearchapp.presentation.home.item.shimmerBookItem
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import com.example.kakaobooksearchapp.presentation.model.BookSortType
-import com.example.kakaobooksearchapp.presentation.navigtation.model.BookNavItem
 import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookListScreen(
-    navController: NavHostController,
+    viewModel: BookViewModel,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: BookViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedSortType by viewModel.selectedSortType.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val state = rememberPullToRefreshState()
-    val gridState = rememberLazyGridState()
+
+    var scrollIndex by rememberSaveable { mutableIntStateOf(0) }
+    var scrollOffset by rememberSaveable { mutableIntStateOf(0) }
+    val gridState = rememberSaveable(saver = LazyGridState.Saver) { LazyGridState() }
+
+    LifecycleResumeEffect(scrollOffset) {
+        scope.launch {
+            gridState.scrollToItem(scrollIndex, scrollOffset)
+        }
+
+        onPauseOrDispose {
+            scrollIndex = gridState.firstVisibleItemIndex
+            scrollOffset = gridState.firstVisibleItemScrollOffset
+        }
+    }
 
     LaunchedEffect (viewModel.uiEffect) {
         viewModel.uiEffect.collect { sideEffect ->
             when (sideEffect) {
                 is BookListUiEffect.OnClickBookDetail -> {
-                    navController.navigate(BookNavItem.BookDetailItem.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    onClick()
                 }
 
                 is BookListUiEffect.ToastEmptySearchText -> {
                     Toast.makeText(context, R.string.empty_search_text, Toast.LENGTH_SHORT).show()
+                }
+
+                is BookListUiEffect.OnClickBookSort -> {
+                    gridState.animateScrollToItem(0, 0)
                 }
             }
         }
@@ -77,7 +97,7 @@ fun BookListScreen(
 
     when (uiState) {
         is BookListState.Error -> {
-            ErrorDialog(requestBookList = viewModel::fetchBookList)
+            ErrorDialog(onRequestClick = viewModel::initializeBookList)
         }
 
         is BookListState.Loading -> {
@@ -88,6 +108,7 @@ fun BookListScreen(
                 selectedSortType = selectedSortType,
                 bookList = emptyFlow<PagingData<Document>>().collectAsLazyPagingItems(),
                 onRefresh = viewModel::fetchBookList,
+                onRequestClick = viewModel::initializeBookList,
                 onSortBoxClick = {},
                 onBookClick = {},
                 modifier = modifier,
@@ -104,6 +125,7 @@ fun BookListScreen(
                 selectedSortType = selectedSortType,
                 bookList = value.bookList.collectAsLazyPagingItems(),
                 onRefresh = viewModel::fetchBookList,
+                onRequestClick = viewModel::initializeBookList,
                 onSortBoxClick = viewModel::updateBookList,
                 onBookClick = viewModel::updateSelectedBook,
                 modifier = modifier,
@@ -121,6 +143,7 @@ fun BookListContent(
     selectedSortType: BookSortType,
     bookList: LazyPagingItems<Document>,
     onRefresh: () -> Unit,
+    onRequestClick: () -> Unit,
     onSortBoxClick: (String) -> Unit,
     onBookClick: (Document) -> Unit,
     modifier: Modifier = Modifier
@@ -152,9 +175,9 @@ fun BookListContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            when {
-                bookList.loadState.refresh is LoadState.Loading -> {
-                    BookLazyVerticalGridComponent(state = gridState) {
+            when (bookList.loadState.refresh) {
+                is LoadState.Loading -> {
+                    BookLazyVerticalGridComponent(state = rememberLazyGridState()) {
                         shimmerBookItem(
                             bookDetail = dummyBook(),
                             onBookClick = {}
@@ -162,24 +185,27 @@ fun BookListContent(
                     }
                 }
 
-                bookList.loadState.refresh is LoadState.NotLoading && bookList.itemCount > 0 -> {
+                is LoadState.NotLoading -> {
                     BookLazyVerticalGridComponent(state = gridState) {
-                        existBookItem(
-                            itemCount = bookList.itemCount,
-                            bookList = bookList,
-                            onBookClick = onBookClick
-                        )
+                        when {
+                            bookList.itemCount > 0 -> {
+                                existBookItem(
+                                    itemCount = bookList.itemCount,
+                                    bookList = bookList,
+                                    onBookClick = onBookClick
+                                )
+                            }
+                            bookList.loadState.append is LoadState.NotLoading && bookList.itemCount == 0 -> {
+                                emptyBookItem()
+                            }
+                        }
                     }
                 }
 
-                bookList.loadState.refresh is LoadState.NotLoading && bookList.itemCount == 0 -> {
+                else -> {
                     BookLazyVerticalGridComponent(state = gridState) {
-                        emptyBookItem()
+                        errorBookItem(onRequestClick)
                     }
-                }
-
-                else -> BookLazyVerticalGridComponent(state = gridState) {
-                    errorBookItem(onRefresh)
                 }
             }
         }

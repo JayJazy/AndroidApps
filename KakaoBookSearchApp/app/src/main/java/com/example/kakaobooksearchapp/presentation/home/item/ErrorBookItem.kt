@@ -4,9 +4,9 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
 
 fun LazyGridScope.errorBookItem(
-    onRefresh: () -> Unit
+    onRequestClick: () -> Unit
 ) {
     item {
-        ErrorDialog(requestBookList = onRefresh)
+        ErrorDialog(onRequestClick = onRequestClick)
     }
 }

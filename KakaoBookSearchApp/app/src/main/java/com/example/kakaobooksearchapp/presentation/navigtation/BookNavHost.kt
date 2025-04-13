@@ -17,14 +17,20 @@ fun BookNavHost(
     viewModel: BookViewModel,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(
+   NavHost(
         navController = navController,
         startDestination = BookNavItem.BookItemList.route
     ) {
         composable(BookNavItem.BookItemList.route) {
             BookListScreen(
-                navController = navController,
                 viewModel = viewModel,
+                onClick = {
+                    navController.navigate(BookNavItem.BookDetailItem.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(BookNavItem.BookItemList.route) { saveState = true }
+                    }
+                },
                 modifier = modifier
                     .fillMaxSize()
             )
