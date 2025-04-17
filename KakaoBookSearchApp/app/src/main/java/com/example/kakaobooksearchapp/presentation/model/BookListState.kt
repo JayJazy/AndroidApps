@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 @Stable
-sealed class BookListState{
+sealed class BookListState {
 
     @Immutable
     data object Loading: BookListState()

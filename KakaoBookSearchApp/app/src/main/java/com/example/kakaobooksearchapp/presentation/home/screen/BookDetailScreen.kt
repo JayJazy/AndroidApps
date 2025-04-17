@@ -51,10 +51,6 @@ fun BookDetailScreen(
             )
         }
 
-        is BookListState.Error -> {
-            ErrorScreen()
-        }
-
         is BookListState.Success -> {
             val value = uiState as BookListState.Success
 
@@ -62,6 +58,10 @@ fun BookDetailScreen(
                 bookData = value.bookDetail ?: dummyBook(),
                 modifier = modifier
             )
+        }
+
+        else -> {
+            ErrorScreen()
         }
     }
 }

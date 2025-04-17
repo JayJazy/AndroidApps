@@ -1,7 +1,6 @@
 package com.example.kakaobooksearchapp.presentation.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.kakaobooksearchapp.data.model.Document
@@ -10,10 +9,7 @@ import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import com.example.kakaobooksearchapp.presentation.model.BookSortType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
@@ -23,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookViewModel @Inject constructor(
     private val fetchBookListUseCase: FetchBookListUseCase
-): ViewModel() {
+): BaseViewModel<BookListState, BookListUiEffect>() {
 
     private val _searchText = MutableStateFlow("kotlin")
     val searchText = _searchText.asStateFlow()
@@ -34,13 +30,7 @@ class BookViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _uiState = MutableStateFlow<BookListState>(BookListState.Loading)
-    val uiState = _uiState.asStateFlow()
-
-    private val _uiEffect = MutableSharedFlow<BookListUiEffect>()
-    val uiEffect = _uiEffect.asSharedFlow()
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    override fun onError(throwable: Throwable) {
         _isRefreshing.value = false
         _uiState.value = BookListState.Error
         Log.e("ViewModel", "Error : $throwable")
@@ -54,7 +44,7 @@ class BookViewModel @Inject constructor(
     }
 
     private fun initData(){
-        viewModelScope.launch(exceptionHandler) {
+        launchSafely {
             _uiState.value = BookListState.Success(
                 bookList = fetchBookListUseCase.fetchBookList(
                     query = _searchText.value,
@@ -69,7 +59,7 @@ class BookViewModel @Inject constructor(
     }
 
     fun searchBookList(searchText: String) {
-        viewModelScope.launch {
+        launchSafely {
             if (searchText.isEmpty()) {
                 _uiEffect.emit(BookListUiEffect.ToastEmptySearchText)
             } else {
@@ -79,9 +69,11 @@ class BookViewModel @Inject constructor(
         }
     }
 
-    fun initializeBookList() {
+    fun requestBookList() {
         _searchText.value = "kotlin"
-        fetchBookList()
+        _errorDialogState.value = false
+        _uiState.value = BookListState.Loading
+        initData()
     }
 
     fun updateBookList(sortText: String) {
@@ -105,9 +97,12 @@ class BookViewModel @Inject constructor(
 
     fun updateSelectedBook(document: Document) {
         val state = uiState.value
-        if (state !is BookListState.Success) return
+        if (state !is BookListState.Success) {
+            _uiState.value = BookListState.Error
+            return
+        }
 
-        viewModelScope.launch(exceptionHandler) {
+        launchSafely {
             _uiEffect.emit(BookListUiEffect.OnClickBookDetail)
 
             _uiState.update {
@@ -120,11 +115,14 @@ class BookViewModel @Inject constructor(
 
     fun fetchBookList() {
         val state = _uiState.value
-        if (state !is BookListState.Success) return
+        if (state !is BookListState.Success) {
+            _uiState.value = BookListState.Error
+            return
+        }
 
         _isRefreshing.value = true
 
-        viewModelScope.launch(exceptionHandler) {
+        launchSafely {
             _uiState.update {
                 state.copy(
                     bookList = fetchBookListUseCase.fetchBookList(

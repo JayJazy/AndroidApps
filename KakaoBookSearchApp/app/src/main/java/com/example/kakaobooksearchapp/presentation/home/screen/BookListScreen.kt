@@ -96,10 +96,6 @@ fun BookListScreen(
     }
 
     when (uiState) {
-        is BookListState.Error -> {
-            ErrorDialog(onRequestClick = viewModel::initializeBookList)
-        }
-
         is BookListState.Loading -> {
             BookListContent(
                 isRefreshing = isRefreshing,
@@ -108,7 +104,7 @@ fun BookListScreen(
                 selectedSortType = selectedSortType,
                 bookList = emptyFlow<PagingData<Document>>().collectAsLazyPagingItems(),
                 onRefresh = viewModel::fetchBookList,
-                onRequestClick = viewModel::initializeBookList,
+                onRequestClick = viewModel::requestBookList,
                 onSortBoxClick = {},
                 onBookClick = {},
                 modifier = modifier,
@@ -125,11 +121,15 @@ fun BookListScreen(
                 selectedSortType = selectedSortType,
                 bookList = value.bookList.collectAsLazyPagingItems(),
                 onRefresh = viewModel::fetchBookList,
-                onRequestClick = viewModel::initializeBookList,
+                onRequestClick = viewModel::requestBookList,
                 onSortBoxClick = viewModel::updateBookList,
                 onBookClick = viewModel::updateSelectedBook,
                 modifier = modifier,
             )
+        }
+
+        else -> {
+            ErrorDialog(onRequestClick = viewModel::requestBookList)
         }
     }
 }
