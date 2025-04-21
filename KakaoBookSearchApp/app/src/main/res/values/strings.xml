@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">KakaoBookSearchApp</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_book_detail">BookDetailActivity</string>
 
     <!-- 바텀 바 -->
     <string name="bookmark">북마크</string>

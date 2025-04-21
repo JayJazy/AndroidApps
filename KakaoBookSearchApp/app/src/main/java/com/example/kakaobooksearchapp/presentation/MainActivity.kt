@@ -31,7 +31,6 @@ import com.example.kakaobooksearchapp.presentation.navigtation.KakaoBookNavHost
 import com.example.kakaobooksearchapp.presentation.navigtation.model.navigateSingleTop
 import com.example.kakaobooksearchapp.presentation.navigtation.model.rememberBottomNavItems
 import com.example.kakaobooksearchapp.presentation.viewmodel.ThemeViewModel
-import com.example.kakaobooksearchapp.ui.theme.KakaoBookSearchAppTheme
 import com.example.kakaobooksearchapp.ui.theme.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,7 +55,7 @@ class MainActivity : ComponentActivity() {
                 false -> ThemeMode.LIGHT
             }
 
-            KakaoBookSearchAppTheme(themeMode = currentThemeMode) {
+            AppThemeWrapper {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
