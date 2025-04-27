@@ -16,14 +16,14 @@
         android:theme="@style/Theme.KakaoBookSearchApp"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.detail.BookDetailActivity"
+            android:name=".presentation.setting.SettingActivity"
             android:exported="false"
-            android:label="@string/title_activity_book_detail"
+            android:label="@string/title_activity_setting"
             android:theme="@style/Theme.KakaoBookSearchApp" />
         <activity
-            android:name=".presentation.search.SearchActivity"
+            android:name=".presentation.detail.DetailBookActivity"
             android:exported="false"
-            android:label="@string/title_activity_search"
+            android:label="@string/title_activity_book_detail"
             android:theme="@style/Theme.KakaoBookSearchApp" />
         <activity
             android:name=".presentation.MainActivity"

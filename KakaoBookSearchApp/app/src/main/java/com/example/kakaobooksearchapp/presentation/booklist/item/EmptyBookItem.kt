@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home.item
+package com.example.kakaobooksearchapp.presentation.booklist.item
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -9,7 +9,7 @@ sealed interface BookListUiEffect {
     data object ToastEmptySearchText: BookListUiEffect
 
     @Immutable
-    data object OnClickBookDetail: BookListUiEffect
+    data class OnClickBookDetail(val isbn: String): BookListUiEffect
 
     @Immutable
     data object OnClickBookSort: BookListUiEffect

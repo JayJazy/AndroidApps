@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home.screen
+package com.example.kakaobooksearchapp.presentation.booklist.content
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -35,11 +35,11 @@ import com.example.kakaobooksearchapp.data.model.Document
 import com.example.kakaobooksearchapp.data.model.Document.Companion.dummyBook
 import com.example.kakaobooksearchapp.presentation.component.BookLazyVerticalGridComponent
 import com.example.kakaobooksearchapp.presentation.component.ErrorDialog
-import com.example.kakaobooksearchapp.presentation.home.item.BookSortItem
-import com.example.kakaobooksearchapp.presentation.home.item.emptyBookItem
-import com.example.kakaobooksearchapp.presentation.home.item.errorBookItem
-import com.example.kakaobooksearchapp.presentation.home.item.existBookItem
-import com.example.kakaobooksearchapp.presentation.home.item.shimmerBookItem
+import com.example.kakaobooksearchapp.presentation.booklist.item.BookSortItem
+import com.example.kakaobooksearchapp.presentation.booklist.item.emptyBookItem
+import com.example.kakaobooksearchapp.presentation.booklist.item.errorBookItem
+import com.example.kakaobooksearchapp.presentation.booklist.item.existBookItem
+import com.example.kakaobooksearchapp.presentation.booklist.item.shimmerBookItem
 import com.example.kakaobooksearchapp.presentation.model.BookListState
 import com.example.kakaobooksearchapp.presentation.model.BookListUiEffect
 import com.example.kakaobooksearchapp.presentation.model.BookSortType
@@ -49,9 +49,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookListScreen(
+fun BookListContent(
     viewModel: BookViewModel,
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
@@ -81,7 +81,7 @@ fun BookListScreen(
         viewModel.uiEffect.collect { sideEffect ->
             when (sideEffect) {
                 is BookListUiEffect.OnClickBookDetail -> {
-                    onClick()
+                    onClick(sideEffect.isbn)
                 }
 
                 is BookListUiEffect.ToastEmptySearchText -> {
@@ -123,7 +123,7 @@ fun BookListScreen(
                 onRefresh = viewModel::fetchBookList,
                 onRequestClick = viewModel::requestBookList,
                 onSortBoxClick = viewModel::updateBookList,
-                onBookClick = viewModel::updateSelectedBook,
+                onBookClick = viewModel::onBookClicked,
                 modifier = modifier,
             )
         }

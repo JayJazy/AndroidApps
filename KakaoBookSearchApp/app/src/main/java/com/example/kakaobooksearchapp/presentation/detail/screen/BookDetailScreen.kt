@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home.screen
+package com.example.kakaobooksearchapp.presentation.detail.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,19 +31,19 @@ import com.example.kakaobooksearchapp.data.model.Document.Companion.dummyBook
 import com.example.kakaobooksearchapp.presentation.component.AsyncImageHandleComponent
 import com.example.kakaobooksearchapp.presentation.component.ShimmerSpacer
 import com.example.kakaobooksearchapp.presentation.component.shimmerEffect
-import com.example.kakaobooksearchapp.presentation.model.BookListState
-import com.example.kakaobooksearchapp.presentation.viewmodel.BookViewModel
-
+import com.example.kakaobooksearchapp.presentation.booklist.screen.ErrorScreen
+import com.example.kakaobooksearchapp.presentation.model.DetailBookState
+import com.example.kakaobooksearchapp.presentation.viewmodel.DetailBookViewModel
 
 @Composable
 fun BookDetailScreen(
-    viewModel: BookViewModel,
+    viewModel: DetailBookViewModel,
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (uiState) {
-        is BookListState.Loading -> {
+        is DetailBookState.Loading -> {
             BookDetailContent(
                 bookData = dummyBook(),
                 modifier = modifier,
@@ -51,11 +51,11 @@ fun BookDetailScreen(
             )
         }
 
-        is BookListState.Success -> {
-            val value = uiState as BookListState.Success
+        is DetailBookState.Success -> {
+            val value = uiState as DetailBookState.Success
 
             BookDetailContent(
-                bookData = value.bookDetail ?: dummyBook(),
+                bookData = value.bookDetail,
                 modifier = modifier
             )
         }

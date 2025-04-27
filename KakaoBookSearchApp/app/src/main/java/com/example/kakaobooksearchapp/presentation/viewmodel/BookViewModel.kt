@@ -95,21 +95,10 @@ class BookViewModel @Inject constructor(
         fetchBookList()
     }
 
-    fun updateSelectedBook(document: Document) {
-        val state = uiState.value
-        if (state !is BookListState.Success) {
-            _uiState.value = BookListState.Error
-            return
-        }
-
+    fun onBookClicked(document: Document) {
         launchSafely {
-            _uiEffect.emit(BookListUiEffect.OnClickBookDetail)
-
-            _uiState.update {
-                state.copy(
-                    bookDetail = document
-                )
-            }
+            _uiEffect.emit(BookListUiEffect.OnClickBookDetail(document.isbn))
+            return@launchSafely
         }
     }
 

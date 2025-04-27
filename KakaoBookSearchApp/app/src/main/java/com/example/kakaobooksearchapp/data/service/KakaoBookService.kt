@@ -19,4 +19,11 @@ interface KakaoBookService{
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<KakaoBookResponse>
+
+    @Headers("Authorization: KakaoAK $api_key")
+    @GET("v3/search/book")
+    suspend fun fetchDetailBook(
+        @Query("query") query: String,
+        @Query("target") target: String = "isbn"
+    ): Response<KakaoBookResponse>
 }

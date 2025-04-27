@@ -1,4 +1,4 @@
-package com.example.kakaobooksearchapp.presentation.home.item
+package com.example.kakaobooksearchapp.presentation.booklist.item
 
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.paging.compose.LazyPagingItems

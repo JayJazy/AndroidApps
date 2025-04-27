@@ -30,4 +30,5 @@
     <string name="text_publisher">출판사 :\u0020</string>
     <string name="text_dateTime">출판일 :\u0020</string>
     <string name="text_won">원</string>
+    <string name="title_activity_setting">SettingActivity</string>
 </resources>
