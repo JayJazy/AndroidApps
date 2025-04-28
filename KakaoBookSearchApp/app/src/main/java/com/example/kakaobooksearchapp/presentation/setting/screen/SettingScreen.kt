@@ -2,6 +2,7 @@ package com.example.kakaobooksearchapp.presentation.setting.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingScreen(
+    innerPadding: PaddingValues,
     currentThemeMode: ThemeMode,
     onThemeModeChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -94,6 +96,7 @@ fun SettingScreen(
 @Composable
 fun PreviewSettingScreen(){
     SettingScreen(
+        innerPadding = PaddingValues(),
         currentThemeMode = ThemeMode.LIGHT,
         onThemeModeChange = { }
     )

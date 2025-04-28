@@ -57,11 +57,9 @@ class SettingActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     SettingScreen(
+                        innerPadding = innerPadding,
                         currentThemeMode = currentThemeMode,
-                        onThemeModeChange = themeViewModel::setDarkMode,
-                        modifier = Modifier
-                            .padding(innerPadding.calculateBottomPadding())
-                            .fillMaxSize()
+                        onThemeModeChange = themeViewModel::setDarkMode
                     )
                 }
             }
