@@ -16,15 +16,30 @@
         android:theme="@style/Theme.KakaoBookSearchApp"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.DeepLinkActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="kakaobooksearchapp"
+                    android:host="book" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".presentation.setting.SettingActivity"
             android:exported="false"
             android:label="@string/title_activity_setting"
             android:theme="@style/Theme.KakaoBookSearchApp" />
         <activity
             android:name=".presentation.detail.DetailBookActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_book_detail"
-            android:theme="@style/Theme.KakaoBookSearchApp" />
+            android:theme="@style/Theme.KakaoBookSearchApp"/>
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"

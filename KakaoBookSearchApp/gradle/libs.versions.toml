@@ -19,6 +19,7 @@ retrofit = "2.11.0"
 ksp = "2.0.20-1.0.24"
 shimmer = "0.5.0"
 room = "2.6.1"
+deeplink-dispatch = "6.2.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+deeplink-dispatch = { module = "com.airbnb:deeplinkdispatch", version.ref = "deeplink-dispatch" }
+deeplink-dispatch-processor = { module = "com.airbnb:deeplinkdispatch-processor", version.ref = "deeplink-dispatch" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

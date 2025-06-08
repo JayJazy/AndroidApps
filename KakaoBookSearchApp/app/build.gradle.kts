@@ -112,4 +112,8 @@ dependencies {
 
     // shimmer
     implementation(libs.facebook.shimmer)
+
+    // deeplink
+    implementation(libs.deeplink.dispatch)
+    ksp(libs.deeplink.dispatch.processor)
 }

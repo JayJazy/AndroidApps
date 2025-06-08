@@ -1,6 +1,7 @@
 package com.example.kakaobooksearchapp.presentation.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -23,7 +24,7 @@ class DetailBookActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val isbn = intent.getStringExtra("isbn") ?: "89969913419788996991342"
-
+        Log.d("dudtjr", isbn)
         enableEdgeToEdge()
         setContent {
             AppThemeWrapper {
